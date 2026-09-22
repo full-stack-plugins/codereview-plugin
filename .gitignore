@@ -8,6 +8,9 @@ dist/
 build/
 *.egg-info/
 .DS_Store
-# OpenSpec 开发工具集成不是分发技能。
-.agents/
+# OpenSpec 开发技能不分发；仓库级市场清单需要入库。
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json
 .claude/

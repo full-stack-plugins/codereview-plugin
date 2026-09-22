@@ -1,7 +1,7 @@
 {
   "name": "codereview-plugin",
   "version": "0.1.0",
-  "description": "用户授权后审查候选提交，支持本次、会话自动与静默。",
+  "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
   "displayName": "CodeReview",
   "author": {"name": "Full Stack Skills / PartMe.AI"},
   "skills": "./skills/"

@@ -3,7 +3,7 @@
 提交前**可选授权**的语义代码审查插件，整合 Open Code Review（OCR）的正式 CLI 接口。
 默认先问用户，拒绝后当前会话静默；审查报告是建议，不是强制通过门禁。
 
-状态：`0.1.0` 开发版。已实现本地内核与离线验证；真实模型调用、Codex/ZCode/Kimi 安装加载均 **UNVERIFIED**。远端源码仓库已创建，尚未发布市场。
+状态：`v0.1.0` 初始版本。已实现本地内核与离线验证；真实模型调用、Codex/ZCode/Kimi 安装加载均 **UNVERIFIED**。正式发布身份以 [GitHub Release](https://github.com/full-stack-plugins/codereview-plugin/releases/tag/v0.1.0) 和 [Full Stack 插件市场](https://github.com/partme-ai/full-stack-plugins) 为准。
 
 ## 使用体验
 
@@ -81,6 +81,6 @@ python3 scripts/codereview.py prepare --request /absolute/private/request.json
 - [验收证据](docs/verification.md)：规格、测试、未完成项对应关系。
 - [OpenSpec 变更](openspec/changes/consent-based-review/proposal.md)：唯一规格事实源，未归档。
 - 插件内唯一分发技能 `codereview` 属于 CLI 编排专属技能，声明在 `plugin-local-skills.json`；没有外部受管技能，不创建空壳 `skills.lock.json`。
-- `.agents/skills/openspec-*` 是项目开发集成，不纳入分发技能清单。
+- `.agents/skills/openspec-*` 是项目开发集成，不纳入分发技能清单；`.agents/plugins/marketplace.json` 是仓库级安装入口。
 
 源码、测试和说明采用 Apache-2.0。上游 OCR 作为用户已有的外部程序调用，不打包其二进制。

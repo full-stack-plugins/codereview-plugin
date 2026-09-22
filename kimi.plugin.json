@@ -1,10 +1,10 @@
 {
   "name": "codereview-plugin",
   "version": "0.1.0",
-  "description": "用户授权后审查候选提交，拒绝后本会话不再提醒。",
+  "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
   "author": {"name": "Full Stack Skills / PartMe.AI"},
   "skills": "./skills/",
-  "interface": {"displayName": "CodeReview", "shortDescription": "可选、可追踪的提交语义审查"},
+  "interface": {"displayName": "CodeReview", "shortDescription": "Review staged commits with explicit consent"},
   "hooks": [
     {"event": "SessionStart", "command": "python3 ./hooks/entry.py --host kimi", "timeout": 10},
     {"event": "UserPromptSubmit", "command": "python3 ./hooks/entry.py --host kimi", "timeout": 10},
