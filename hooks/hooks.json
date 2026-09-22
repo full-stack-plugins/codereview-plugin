@@ -1,0 +1,9 @@
+{
+  "hooks": {
+    "SessionStart": [{"hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/entry.py\"", "timeout": 10}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/entry.py\"", "timeout": 10}]}],
+    "PreToolUse": [{"matcher": "Bash|Shell|exec_command", "hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/entry.py\"", "timeout": 10}]}],
+    "PostToolUse": [{"matcher": "Bash|Shell|exec_command", "hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/entry.py\"", "timeout": 10}]}],
+    "Stop": [{"hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/entry.py\"", "timeout": 10}]}]
+  }
+}

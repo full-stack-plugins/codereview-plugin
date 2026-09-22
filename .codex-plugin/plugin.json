@@ -1,0 +1,18 @@
+{
+  "name": "codereview-plugin",
+  "version": "0.1.0",
+  "description": "需用户授权的提交语义审查；支持本次、会话自动和会话静默。",
+  "author": {
+    "name": "Full Stack Skills / PartMe.AI"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "CodeReview",
+    "shortDescription": "授权后审查暂存内容，拒绝后会话静默",
+    "longDescription": "通过 Open Code Review 选择候选文件和规则，默认由当前宿主智能体审查，也可使用 OCR-managed 模式；提供结构化建议，不替代流程验收或静态检查。",
+    "developerName": "Full Stack Skills / PartMe.AI",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": ["请披露代码外发范围，再询问是否审查本次提交。"]
+  }
+}
