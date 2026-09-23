@@ -15,7 +15,7 @@
 | manual | command 可选 | 显式手动路径，即使静默也返回任务及披露 scope，不授予授权 |
 | doctor | execution_mode/model 可选 | 版本及 delegate/managed 能力检查；不读 LLM 配置、不调用模型 |
 | decide | task_id、choice、source、scope | choice=once/session/mute，scope 原样来自 prepare/manual |
-| review | task_id；execution_mode/model；timeout 可选，0–1800 秒，默认 600 | Delegation 输出审查计划；OCR-managed 输出报告；都不提交 |
+| review | task_id；execution_mode/model；timeout 可选，0–1800 秒，默认 600 | Delegation 输出审查计划；OCR-managed 输出报告；都不提交。execution_mode 必须与任务授权模式一致：delegated 可省略，ocr-managed 必须显式携带，否则返回 execution_mode_mismatch |
 | complete-delegated | task_id、execution_mode=delegated、model、report | 校验逐文件覆盖并回填宿主审查结果；成功后清理快照 |
 | result / evidence | task_id | 报告 / 给协调方的版本化证据 |
 | proceed / skip | task_id、source | 保留风险继续 / 跳过当前可选审查 |

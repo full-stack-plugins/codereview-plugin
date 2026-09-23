@@ -1,0 +1,28 @@
+{
+	"schema_version": "1",
+	"mode": "commit",
+	"repository": "/private/tmp/crv-run/repo",
+	"commit": "HEAD",
+	"background": "baseline",
+	"total_files": 2,
+	"reviewable_count": 1,
+	"excluded_count": 1,
+	"total_insertions": 3,
+	"total_deletions": 0,
+	"reviewable_files": [
+		{
+			"path": "calc.py",
+			"status": "added",
+			"insertions": 2,
+			"deletions": 0
+		}
+	],
+	"excluded_files": [
+		{
+			"path": "README.md",
+			"status": "added",
+			"insertions": 1,
+			"deletions": 0
+		}
+	]
+}

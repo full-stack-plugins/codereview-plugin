@@ -1,0 +1,48 @@
+{
+	"status": "complete",
+	"llm": {
+		"<redacted>": true
+	},
+	"message": "redacted",
+	"summary": {
+		"files_reviewed": 1,
+		"comments": 1,
+		"total_tokens": 15416,
+		"input_tokens": 15188,
+		"output_tokens": 228,
+		"elapsed": "11s"
+	},
+	"tool_calls": {
+		"total": 1,
+		"by_tool": {
+			"code_comment": 1
+		},
+		"failure": 0,
+		"failure_by_tool": {},
+		"failure_details": []
+	},
+	"comments": [
+		{
+			"path": "a.py",
+			"content": "`div` raises `ZeroDivisionError` when `b` is 0. Since `add` above has no guard either, if this is intended as a small utility API, consider handling or documenting the zero-divisor case.",
+			"suggestion_code": "def div(a, b):\n    if b == 0:\n        raise ValueError(\"divisor must be non-zero\")\n    return a / b",
+			"existing_code": "def div(a, b):\n    return a / b",
+			"start_line": 5,
+			"end_line": 6,
+			"category": "bug",
+			"severity": "low"
+		}
+	],
+	"groups": [
+		{
+			"label": "a.py",
+			"files": [
+				"a.py"
+			]
+		}
+	],
+	"session_id": "redacted",
+	"manifest": {
+		"<redacted>": true
+	}
+}

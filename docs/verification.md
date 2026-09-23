@@ -80,6 +80,26 @@
 
 插件专属技能从 `skills/codereview` 更名为 `skills/codereview-harness`，更新了本地清单、Hook 提示和回归测试。独立技能仓的两个路由引用已在 `v0.1.1` 修正，插件锁随之更新；七个受管技能仍保持来源可追溯。macOS CI 暴露已退出子进程的进程组清理可能返回 `PermissionError`；修正为不覆盖原结果，父进程仍存活时直接终止，并加入回归测试。`/opt/anaconda3/bin/python3 -m pytest -q` 为 **115 passed**；技能 quick_validate、本地结构校验、受管技能离线校验和 OpenSpec strict 校验通过。这些检查不代表已安装宿主包含新名称；tag、Release、市场和 CI 分别核对。
 
+## 2026-09-24 真实引擎与双模式验收（7.1 完成）
+
+环境：macOS，ocr v1.12.9（npm 官方包 bccbc15，与技能锁同一提交；Homebrew bottled 1.12.9 亦可识别），真实端点 Zhipu glm-4.7。外发内容仅 `/tmp` 无敏感信息玩具仓库。
+
+| 环节 | 实际结果 |
+| --- | --- |
+| `doctor` | `{"version":"1.12.9","action":"ready","delegated":true,"managed":true}` |
+| 真实 Delegation 全链路 | prepare→ask_user→decide(once)→review 计划（真实 preview/rule）→宿主逐文件审查 3 findings→complete-delegated（success）→真实提交→post-commit `closed:true` |
+| 真实 OCR-managed 全链路 | prepare(ocr-managed，真实端点披露)→decide(once)→review（真实模型调用）success→真实提交→post-commit `closed:true` |
+
+验收中暴露并修复的真实缺陷（根因类别：夹具仿真 schema 与上游实样漂移）：
+
+1. `review` 请求漏带 `execution_mode` 时范围重推导静默撤销授权并误报 `not_authorized`；现显式报 `execution_mode_mismatch`。
+2. 真实 delegate 输出为 `schema_version` + 整数 `group_id`，原校验只认想象的 `version` + 字符串；现兼容两种并以真实样例为契约（`tests/fixtures/real_v1129_*.json`）。
+3. 遥测开启时引擎 OTEL JSON 污染 stdout（解析失败的隐藏根因）；现两种模式统一拒绝遥测开启配置，拒绝发生在任何引擎子进程之前。
+4. 真实 `result.json` 的 `status` 为 `complete`，`normalize` 原只认想象枚举；已兼容并以真实样例钉契约。
+5. 版本识别兼容 Homebrew 分发的无 `v` 前缀版本串。
+
+`python3 -m pytest -q`：**120 passed**（新增 5 项真实契约/回归测试）。宿主侧新增活体证据：ZCode PreToolUse 在真实会话两次暂停疑似提交命令、重复暂停 `notify:false` 不重复发问；该安装副本提示仍是改名前文案，待随发布更新。Codex/Kimi 安装加载未验收（5.4/7.2 剩余部分）。
+
 ## 剩余风险
 
 合作式 Harness 不是恶意进程防护：同用户可修改状态，授权事件引用不是签名；无操作系统沙箱，Git 别名/脚本绕过、配置读取及提交前竞态仍需明确接受。Windows 原生不支持。模型可能漏报，limited 覆盖不等于完整；用户继续不等于检查通过。外部配置/规则不支持时须解释并允许跳过，不静默扩大授权。

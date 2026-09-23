@@ -93,7 +93,8 @@ def normalize(output):
         raw = json.loads(output)
     except (ValueError, TypeError) as exc:
         raise ValueError("invalid_engine_output") from exc
-    statuses = {"success": "success", "completed_with_warnings": "partial",
+    statuses = {"success": "success", "complete": "success",
+                "completed_with_warnings": "partial",
                 "completed_with_errors": "partial", "skipped": "skipped"}
     if not isinstance(raw, dict) or raw.get("status") not in statuses or "comments" not in raw:
         raise ValueError("invalid_engine_status")
@@ -200,7 +201,7 @@ class OCR:
     def capabilities(self, cwd):
         """只探测 CLI 接口，不读取 LLM 配置，也不执行连接测试。"""
         code, stdout, _ = run_process(self.command + ["--version"], cwd, self.env(), timeout=5)
-        match = re.search(r"\bopen-code-review v(\d+\.\d+\.\d+)(?:\s|$)", stdout)
+        match = re.search(r"\bopen-code-review v?(\d+\.\d+\.\d+)(?:\s|$)", stdout)
         if code or not match:
             raise ValueError("unsupported_engine_version")
         version = match.group(1)
@@ -242,8 +243,25 @@ class OCR:
                 and not PurePosixPath(value).is_absolute()
                 and ".." not in PurePosixPath(value).parts and "\\" not in value)
 
+    def _require_telemetry_off(self):
+        """Delegation 不要求 LLM 配置；但遥测开启会外发宿主元数据并污染输出流。"""
+        path = Path(self.config_path) if self.config_path is not None else Path.home() / ".opencodereview/config.json"
+        if not path.exists():
+            return
+        if path.is_symlink() or path.stat().st_size > 1024 * 1024:
+            raise ValueError("unsupported_config_file")
+        try:
+            cfg = json.loads(path.read_text())
+        except (ValueError, OSError) as exc:
+            raise ValueError("invalid_engine_config") from exc
+        if not isinstance(cfg, dict) or not isinstance(cfg.get("telemetry", {}), dict):
+            raise ValueError("invalid_engine_config")
+        if cfg.get("telemetry", {}).get("enabled"):
+            raise ValueError("telemetry_must_be_disabled_for_review")
+
     def delegate(self, snapshot, *, cancelled=lambda: False, timeout=60):
         """让 OCR 选择文件和解析规则，实际语义审查交给宿主智能体。"""
+        self._require_telemetry_off()
         capabilities = self.capabilities(snapshot.path)
         if not capabilities["delegated"]:
             raise ValueError("delegation_not_supported")
@@ -257,7 +275,8 @@ class OCR:
             preview = json.loads(preview_text)
             reviewable = preview["reviewable_files"]
             excluded = preview["excluded_files"]
-            if (not isinstance(preview, dict) or preview.get("version") != "1"
+            if (not isinstance(preview, dict)
+                    or preview.get("schema_version", preview.get("version")) != "1"
                     or not isinstance(reviewable, list) or not isinstance(excluded, list)
                     or any(not isinstance(item, dict) or not self._safe_path(item.get("path"))
                            or not isinstance(item.get("status"), str) for item in reviewable)
@@ -279,14 +298,18 @@ class OCR:
             try:
                 rule_result = json.loads(rule_text)
                 groups = rule_result["groups"]
-                if (not isinstance(rule_result, dict) or rule_result.get("version") != "1"
+                if (not isinstance(rule_result, dict)
+                        or rule_result.get("schema_version", rule_result.get("version")) != "1"
                         or not isinstance(groups, list)):
                     raise ValueError()
                 covered = []
                 for group in groups:
+                    gid = group.get("group_id") if isinstance(group, dict) else None
+                    # 真实 v1.12.9 的 group_id 是整数，旧接口是字符串；两者都接受。
                     if (not isinstance(group, dict)
+                            or not ((isinstance(gid, str) and gid) or type(gid) is int)
                             or any(not isinstance(group.get(key), str) or not group[key]
-                                   for key in ("group_id", "source", "pattern", "rule"))
+                                   for key in ("source", "pattern", "rule"))
                             or not isinstance(group.get("files"), list)
                             or any(not self._safe_path(path) for path in group["files"])):
                         raise ValueError()

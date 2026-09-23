@@ -14,3 +14,4 @@ build/
 .agents/plugins/*
 !.agents/plugins/marketplace.json
 .claude/
+.codegraph/

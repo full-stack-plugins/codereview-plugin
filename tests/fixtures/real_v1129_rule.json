@@ -1,0 +1,12 @@
+{
+	"schema_version": "1",
+	"groups": [
+		{
+			"group_id": 1,
+			"source": "system",
+			"pattern": "**/*.{py,pyi,ipynb}",
+			"files": ["calc.py"],
+			"rule": "> Favor precision over recall: only raise an issue when you are confident it is a real defect, and stay silent when the surrounding context is unclear — a false alarm costs more reviewer trust than a missed minor issue. Treat security and correctness findings as blocking, and style or idiom suggestions as non-blocking.\n\n#### Obvious Typos or Spelling Errors\n- Spelling errors in variable, function, class, or module names at their declaration sites; do not report spelling errors at reference sites, as these are determined by the declaration\n\n#### Dead Code\n- Variables, imports, or function parameters that are declared but never read or referenced\n\n#### Error Handling and Exceptions\n- Bare `except:` swallows everything, including `KeyboardInterrupt` and `SystemExit`; catch `except Exception` at minimum, and prefer the specific exception types you expect\n- Exceptions caught and silently discarded (`pass`) without logging or re-raising"
+		}
+	]
+}

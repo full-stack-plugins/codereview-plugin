@@ -174,6 +174,9 @@ class Runtime:
                 raise ValueError("not_authorized")
             if task.get("unsupported"):
                 raise ValueError("unsupported_commit")
+            # 模式不一致必须显式报错；进入范围重推导会静默撤销授权并误报 not_authorized。
+            if task["scope"]["execution_mode"] != self.execution_mode:
+                raise ValueError("execution_mode_mismatch")
             candidate = Candidate.read(task["scope"]["worktree"])
             scope = self._scope(candidate.repo)
             with self.store.transaction() as state:

@@ -62,12 +62,12 @@ flowchart LR
 - Python 3.11+、POSIX（macOS/Linux）；使用 `fcntl` 和进程组，Windows 原生未支持。WSL 需单独实测。
 - Git 2.41+；已安装的 `ocr` 必须支持 `delegate preview/rule --format json`；OCR-managed 还必须支持 `review --output`。按能力探测，不固定单一版本。
 - 默认 Delegation：OCR 只选择文件并解析规则，由当前 Codex/ZCode/Kimi 智能体审查，不要求 OCR 配置 LLM。可选 OCR-managed 才要求明确端点、模型与凭据。
-- 本机当前 `ocr` 为 v1.6.5，不具备上述正式双模式接口；代码已按上游 v1.12.9 接口适配，但本轮未获授权升级全局工具。`doctor` 仅探测命令能力，不执行 `ocr llm test` 或真实审查。
+- 双模式接口已在真实 `ocr` v1.12.9（npm 官方包 bccbc15）上完成真实审查验收。安装渠道支持 npm 官方包与 Homebrew（后者版本串无 `v` 前缀，已兼容识别）；同一台机器存在多份安装时以 PATH 解析为准，需排查旧副本遮蔽。`doctor` 仅探测命令能力，不执行 `ocr llm test` 或真实审查。
 - 只支持普通暂存区提交、首次提交及显式 `git -C`。`-a`、amend、pathspec、复合命令、冲突/merge/rebase、符号链接、子模块、超限树返回受限状态，可明确跳过。
 - 快照限制：基线与候选条目合计 5000、单 blob 4 MiB、去重 blob 总量 64 MiB；不截断后冒充完整审查。
 - Hook 不是安全沙箱；Git 别名、动态脚本、宿主未覆盖的工具可能绕过。检查与实际提交间仍存在竞态窗口。
 
-OCR-managed 下，用户配置里的遥测开启、自定义全局/项目规则、额外请求 headers/body 等不能确认外发边界的配置会被拒绝；插件不会擅自修改它们。Delegation 仍需用户授权，因为当前宿主智能体会读取隔离候选快照。详见[隐私](PRIVACY.md)。
+用户配置里的遥测开启在两种模式下都会被拒绝（遥测会外发宿主元数据并污染引擎输出流）；OCR-managed 还会拒绝自定义全局/项目规则、额外请求 headers/body 等不能确认外发边界的配置。插件不会擅自修改它们。Delegation 仍需用户授权，因为当前宿主智能体会读取隔离候选快照。详见[隐私](PRIVACY.md)。
 
 ## 开发验证
 
