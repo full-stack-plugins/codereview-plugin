@@ -1,7 +1,7 @@
 # 宿主适配与待授权安装
 
 2026-09-23 核对官方协议和本机 CLI 帮助。以下均未执行安装，实际加载状态为 **UNVERIFIED**。
-源路径以下记为 `<插件目录>`；发布 URL、市场名称尚未确定，不提供虚构 `owner/repo` 安装命令。
+源路径以下记为 `<插件目录>`；正式聚合市场为 `partme-ai/full-stack-plugins`，插件 ID 为 `codereview-plugin`。市场登记与实际宿主加载是不同证据。
 
 | 项目 | Codex | ZCode | Kimi |
 | --- | --- | --- | --- |
@@ -21,15 +21,14 @@ Hook 超时/异常按可选插件降级为 UNVERIFIED，不宣称阻断所有提
 
 ## Codex
 
-本机 `codex plugin add --help` 表明通过已配置市场安装，不支持把源码路径当插件 selector。
-待用户批准后，使用 plugin-creator 建立本地市场条目，再用该真实市场 ID 安装；这会修改用户市场、宿主配置与缓存，当前未执行。
+本机 `codex plugin add --help` 表明通过已配置市场安装，不支持把源码路径当插件 selector。市场入口已发布，可在获得安装授权后使用 `codex plugin marketplace add partme-ai/full-stack-plugins` 与 `codex plugin add codereview-plugin@full-stack-plugins`；这会修改用户宿主配置与缓存，当前未执行。
 安装后新建会话，核实插件技能和 Hooks 的用户信任状态；安装不等于信任。卸载使用 `codex plugin remove <实际插件@市场>`。
 [官方 Hooks](https://developers.openai.com/codex/hooks) 是协议依据，不以其他客户端 Hook 行为代替 Codex 实测。
 
 ## ZCode
 
 在插件页面“创建 → 添加插件市场”选择经批准的本地市场目录/清单，校验后在该市场分组安装。
-本轮没有创建市场条目；待确定市场目标后生成，不直接覆盖已有个人市场。卸载/禁用通过“管理已安装”，新会话重新确认 Hook 配置。
+市场条目已经发布，卸载/禁用通过“管理已安装”，新会话重新确认 Hook 配置与八个技能的发现状态。
 [官方插件说明](https://zcode.z.ai/cn/docs/plugin)、[官方 Hooks](https://zcode.z.ai/en/docs/hooks)。
 
 ## Kimi
@@ -48,5 +47,5 @@ Hook 超时/异常按可选插件降级为 UNVERIFIED，不宣称阻断所有提
 
 ## 每端真实验收清单
 
-记录宿主版本、插件安装版本、session_id 来源；在无敏感信息临时 Git 仓库验证：发现技能、SessionStart 不提问、一次暂停、用户未回答不重复、once、session、mute、跨会话重置、提交失败重试、成功后新任务、撤销、工作目录覆盖、三插件共存。
+记录宿主版本、插件安装版本、session_id 来源；在无敏感信息临时 Git 仓库验证：八个技能发现、官方技能与 harness 的触发路由、SessionStart 不提问、一次暂停、用户未回答不重复、once、session、mute、跨会话重置、提交失败重试、成功后新任务、撤销、工作目录覆盖、三插件共存。
 先验证拒绝路径（零模型请求）；模型路径需单独确认实际端点及允许发送的临时文件。不把 fixture 事件通过记为安装验收通过。

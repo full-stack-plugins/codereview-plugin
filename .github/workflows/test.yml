@@ -19,5 +19,15 @@ jobs:
       - run: python -m pip install pytest==8.3.4
       - run: python -m pytest -q
       - run: python scripts/validate_local.py
+      - run: python scripts/vendor/skill_vendor.py check --offline
       - run: python -m compileall -q codereview_core scripts hooks
       # 不安装 OCR，不配置模型密钥；CI 只做离线验证。
+
+  source-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python scripts/vendor/skill_vendor.py check

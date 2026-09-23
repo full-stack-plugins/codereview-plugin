@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tomllib
 
 import pytest
 
@@ -59,11 +60,14 @@ def test_host_context_and_stop_summary_are_not_authorization_questions(runtime):
 def test_manifests_have_separate_host_loading_contracts():
     paths = [".codex-plugin/plugin.json", ".zcode-plugin/plugin.json", "kimi.plugin.json"]
     data = [json.loads((ROOT / p).read_text()) for p in paths]
-    assert {m["version"] for m in data} == {"0.1.0"}
+    expected_version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
+    assert {m["version"] for m in data} == {expected_version}
     assert {m["name"] for m in data} == {"codereview-plugin"}
     assert "hooks" not in data[0]
     for manifest in data:
         assert (ROOT / manifest["skills"] / "codereview/SKILL.md").exists()
+        assert (ROOT / manifest["skills"] / "open-code-review/SKILL.md").exists()
+        assert (ROOT / manifest["skills"] / "open-code-review-delegate/SKILL.md").exists()
     events = {"SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse", "Stop"}
     shared = json.loads((ROOT / "hooks/hooks.json").read_text())
     assert set(shared["hooks"]) == events

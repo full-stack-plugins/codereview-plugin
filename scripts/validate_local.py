@@ -15,9 +15,15 @@ def validate(root):
         assert "[TODO:" not in json.dumps(manifest), name
     assert "hooks" not in json.loads((root / ".codex-plugin/plugin.json").read_text())
     inventory = json.loads((root / "plugin-local-skills.json").read_text())
+    lock = json.loads((root / "skills.lock.json").read_text())
+    assert inventory == {"version": 1, "dest": "skills/", "skills": ["codereview"]}
+    assert lock["version"] == 1
+    managed = [name for source in lock["sources"] for name in source["skills"]]
+    assert len(managed) == len(set(managed)) == 7
+    assert sorted(source["package"] for source in lock["sources"]) == ["codereview-skills", "open-code-review"]
+    assert "codereview" not in managed
     actual = sorted(p.parent.name for p in (root / "skills").glob("*/SKILL.md"))
-    assert inventory == {"version": 1, "dest": "skills/", "skills": actual}
-    assert actual == ["codereview"]
+    assert actual == sorted(managed + inventory["skills"])
     for skill in (root / "skills").glob("*/SKILL.md"):
         text = skill.read_text()
         assert text.startswith("---\nname: " + skill.parent.name + "\n")
@@ -29,7 +35,8 @@ def validate(root):
             if "://" in link or link.startswith("#"):
                 continue
             target = (md.parent / link.split("#")[0]).resolve()
-            assert target.is_relative_to((root / "skills/codereview").resolve()), link
+            skill_root = root / "skills" / md.relative_to(root / "skills").parts[0]
+            assert target.is_relative_to(skill_root.resolve()), link
             assert target.exists(), link
     shared = json.loads((root / "hooks/hooks.json").read_text())["hooks"]
     kimi = json.loads((root / "kimi.plugin.json").read_text())["hooks"]

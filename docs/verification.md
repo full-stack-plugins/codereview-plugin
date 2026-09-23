@@ -1,6 +1,6 @@
-# 验收记录：consent-based-review
+# 验收记录：consent-based-review（v0.1.0 历史基线）
 
-日期：2026-09-23。OpenSpec schema：spec-driven；唯一事实源为 `openspec/changes/consent-based-review/`。当前 profile 没有单独 verify 技能，本记录为等价的规格—代码—测试核验，**不归档、不宣称真实宿主/模型验收完成**。
+日期：2026-09-23。OpenSpec schema：spec-driven；授权行为事实源为 `openspec/changes/consent-based-review/`。下述 111 项测试和 0.1.0 清单属于首版历史基线，**不是当前 0.2.0 的执行证据**；真实宿主/模型验收仍未完成。
 
 ## 已实际执行
 
@@ -16,7 +16,7 @@
 | `openspec validate consent-based-review --strict` | Change is valid |
 
 系统技能校验器来自本机 `/Users/wandl/.codex/skills/.system/`。CI 采用仓库自带结构校验，不依赖该机器路径。
-CI 配置覆盖 macOS/Linux、Python 3.11/3.13，但远端尚未创建/推送，**没有远端 CI 成功证据**。当前执行证据只属于上述本机环境。
+当时 CI 尚未创建/推送；此处保留当时的本地证据边界，不代表当前发布状态。
 测试中的 OCR 是真实子进程夹具，不是实际 OCR 服务调用；测试 Git 提交只发生在 pytest 临时仓库。
 
 ## 规格逐项映射
@@ -59,6 +59,22 @@ CI 配置覆盖 macOS/Linux、Python 3.11/3.13，但远端尚未创建/推送，
 3. **7.2 三端安装加载**：需要安装授权和对应宿主，逐端核对运行版本、技能发现、Hook 事件及三种选择；安装后联同 5.4 验收。
 
 其余 23 项有本地实现与验证证据。源码提交、版本 tag、GitHub Release、市场登记和实际宿主运行分别需要独立核对；本记录不能代替真实 OCR 或三端安装验收。FlowGuard/CodeGuard 的原有工作不在本轮修改范围。
+
+## v0.2.0 技能整合的当前证据
+
+规格事实源为 `openspec/changes/integrate-codereview-skills/`；此变更只约束技能分发与路由，不覆盖上文授权规格。2026-09-23 本地执行：
+
+| 检查 | 结果 |
+| --- | --- |
+| 独立技能仓 `scripts/lint_skills.py` 与 5 个 `quick_validate.py` | 5/5 通过 |
+| 独立技能仓 TRACE 确定性基分 | 4.22–4.42；见仓库 `TRACE_EVALUATION.md`，无真实效果对照 |
+| `python3 scripts/vendor/skill_vendor.py check --offline` | 7 个受管技能与锁中摘要一致 |
+| `python3 scripts/vendor/skill_vendor.py check` | 两个固定 tag 的 peeled commit 与目录内容一致 |
+| `/opt/anaconda3/bin/python3 -m pytest -q` | **114 passed** |
+| `python3 scripts/validate_local.py`、插件结构校验 | 均通过；宿主运行 UNVERIFIED |
+| `openspec validate integrate-codereview-skills --strict` | Change is valid |
+
+本机 Codex `quick_validate.py` 对 Alibaba 原版两个技能的可选 `compatibility` frontmatter 字段报 schema 不支持；没有为通过本机工具而改写上游受管副本。官方技能的原版一致性由 vendor 哈希验证；实际 Codex 发现/加载仍待新环境验收。
 
 ## 剩余风险
 

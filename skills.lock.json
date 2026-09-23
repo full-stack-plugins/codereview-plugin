@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "package": "codereview-skills",
+      "repo": "https://github.com/full-stack-skills/codereview-skills.git",
+      "ref": "v0.1.0",
+      "sha": "b832a6bcb1be8d1ec057d69dce7d84c810db675a",
+      "skills": [
+        "codereview-context-impact",
+        "codereview-finding-triage",
+        "codereview-fix-verify",
+        "codereview-rules",
+        "codereview-scan"
+      ],
+      "dest": "skills/",
+      "sha256": {
+        "codereview-context-impact": "519c68cbea21c05fd8addaee64eb2c6b6f4a232785984ddd5166273364143c7d",
+        "codereview-finding-triage": "2d3cba9212929fbb2c01e53b5622f068094d7be69f37ff6b84ce42e24c85e708",
+        "codereview-fix-verify": "bc3df83928a6e81e4a79c5150d529271f22dbcf0b9b5014c364550572ce80b6d",
+        "codereview-rules": "4b746b19d74ee88cebbd8ac4bce5e248f0bdd20e227b05a70fbe0c6e0072c8fa",
+        "codereview-scan": "16b5800b9c7d0904a213d086d46107247067fbb12a454a39a1377bebf80ee2ba"
+      }
+    },
+    {
+      "package": "open-code-review",
+      "repo": "https://github.com/alibaba/open-code-review.git",
+      "ref": "v1.12.9",
+      "sha": "bccbc15f785269400735d5255540c231e6c02b6d",
+      "skills": [
+        "open-code-review",
+        "open-code-review-delegate"
+      ],
+      "dest": "skills/",
+      "sha256": {
+        "open-code-review": "138affb878858bc862107e9a28ea6965e3497914ee7ea6a49c47c1c148c1d528",
+        "open-code-review-delegate": "6605461b1377652971dc9f4c8a47997d871a37de14e8008c35fdbfd56704a983"
+      }
+    }
+  ]
+}
