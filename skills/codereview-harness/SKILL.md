@@ -1,5 +1,5 @@
 ---
-name: codereview
+name: codereview-harness
 description: 处理 CodeReview 插件的提交前授权提示，或用户要求审查暂存内容、查看报告、跳过/撤销/恢复审查时使用。编排本插件 CLI 与 Open Code Review；不替代 CodeGuard 静态检查或 FlowGuard 验收。
 ---
 

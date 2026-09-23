@@ -48,7 +48,7 @@ def test_host_context_and_stop_summary_are_not_authorization_questions(runtime):
     from codereview_core.hosts import handle
     payload = {"session_id": "session", "cwd": str(runtime.repo)}
     code, context = handle("codex", dict(payload, hook_event_name="SessionStart"), runtime=runtime)
-    assert code == 0 and "UNVERIFIED" in context
+    assert code == 0 and "UNVERIFIED" in context and "codereview-harness" in context
     task = runtime.prepare()
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.review(task["task_id"])
@@ -65,7 +65,7 @@ def test_manifests_have_separate_host_loading_contracts():
     assert {m["name"] for m in data} == {"codereview-plugin"}
     assert "hooks" not in data[0]
     for manifest in data:
-        assert (ROOT / manifest["skills"] / "codereview/SKILL.md").exists()
+        assert (ROOT / manifest["skills"] / "codereview-harness/SKILL.md").exists()
         assert (ROOT / manifest["skills"] / "open-code-review/SKILL.md").exists()
         assert (ROOT / manifest["skills"] / "open-code-review-delegate/SKILL.md").exists()
     events = {"SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse", "Stop"}

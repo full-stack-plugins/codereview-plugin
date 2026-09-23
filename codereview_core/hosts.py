@@ -48,7 +48,7 @@ def handle(host, payload, *, runtime=None):
     runtime = runtime or Runtime(state_root(), host, session, cwd, host_model=model)
     if event != "PreToolUse":
         if event == "SessionStart" and runtime.store.read()["preference"] != "MUTED":
-            message = "CodeReview: 可选提交审查；使用 codereview 技能，未授权不外发。实际宿主加载验收 UNVERIFIED。"
+            message = "CodeReview: 可选提交审查；使用 codereview-harness 技能，未授权不外发。实际宿主加载验收 UNVERIFIED。"
             if host == "kimi":
                 return 0, message
             return 0, json.dumps({"hookSpecificOutput": {"hookEventName": event, "additionalContext": message}})
@@ -87,7 +87,7 @@ def handle(host, payload, *, runtime=None):
                 consent.get_task(state, result["task_id"])["command"] = command
         return 0, ""
     context = {"version": 1, "host": host, "session": session, "repo": cwd, **result}
-    return 2, ("CodeReview 暂停本次提交，未执行审查。使用 codereview 编排技能处理下列状态。"
+    return 2, ("CodeReview 暂停本次提交，未执行审查。使用 codereview-harness 编排技能处理下列状态。"
                "首次询问：仅本次审查 / 当前会话自动审查 / 本会话不再提醒。"
                "notify=false 时不要重复问同一问题，等待原决定；用户可明确 skip 当前任务。"
                "结果仅建议，不代表 FlowGuard/CodeGuard 放行。\n" + json.dumps(context, ensure_ascii=True))

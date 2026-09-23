@@ -49,7 +49,7 @@ codereview-plugin/
     engine.py          # OCR 调用与结果校验
     protocol.py        # 核心请求/响应
     hosts.py           # 分宿主输入输出适配
-  skills/codereview/SKILL.md
+  skills/codereview-harness/SKILL.md
   plugin-local-skills.json
   tests/
   docs/

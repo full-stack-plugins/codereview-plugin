@@ -16,12 +16,12 @@ def validate(root):
     assert "hooks" not in json.loads((root / ".codex-plugin/plugin.json").read_text())
     inventory = json.loads((root / "plugin-local-skills.json").read_text())
     lock = json.loads((root / "skills.lock.json").read_text())
-    assert inventory == {"version": 1, "dest": "skills/", "skills": ["codereview"]}
+    assert inventory == {"version": 1, "dest": "skills/", "skills": ["codereview-harness"]}
     assert lock["version"] == 1
     managed = [name for source in lock["sources"] for name in source["skills"]]
     assert len(managed) == len(set(managed)) == 7
     assert sorted(source["package"] for source in lock["sources"]) == ["codereview-skills", "open-code-review"]
-    assert "codereview" not in managed
+    assert "codereview-harness" not in managed
     actual = sorted(p.parent.name for p in (root / "skills").glob("*/SKILL.md"))
     assert actual == sorted(managed + inventory["skills"])
     for skill in (root / "skills").glob("*/SKILL.md"):

@@ -14,7 +14,7 @@ VENDOR = ROOT / "scripts/vendor/skill_vendor.py"
 def test_distribution_inventory_and_pins():
     lock = json.loads((ROOT / "skills.lock.json").read_text())
     local = json.loads((ROOT / "plugin-local-skills.json").read_text())
-    assert local["skills"] == ["codereview"]
+    assert local["skills"] == ["codereview-harness"]
     assert {source["package"] for source in lock["sources"]} == {"codereview-skills", "open-code-review"}
     assert all(source["ref"].startswith("v") and len(source["sha"]) == 40 for source in lock["sources"])
     managed = {name for source in lock["sources"] for name in source["skills"]}
@@ -37,7 +37,7 @@ def test_vendor_detects_local_tamper(tmp_path):
 
 
 def test_commit_harness_does_not_dispatch_raw_upstream_review():
-    harness = (ROOT / "skills/codereview/SKILL.md").read_text()
+    harness = (ROOT / "skills/codereview-harness/SKILL.md").read_text()
     assert "不能继承这里的提交授权" in harness
     assert "不在此步骤调用上游技能的裸 `ocr review`" in harness
     for name in ("open-code-review", "open-code-review-delegate"):

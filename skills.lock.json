@@ -4,8 +4,8 @@
     {
       "package": "codereview-skills",
       "repo": "https://github.com/full-stack-skills/codereview-skills.git",
-      "ref": "v0.1.0",
-      "sha": "b832a6bcb1be8d1ec057d69dce7d84c810db675a",
+      "ref": "v0.1.1",
+      "sha": "a97883128c85a3dc4f7eacc6d65eab909bece498",
       "skills": [
         "codereview-context-impact",
         "codereview-finding-triage",
@@ -15,11 +15,11 @@
       ],
       "dest": "skills/",
       "sha256": {
-        "codereview-context-impact": "519c68cbea21c05fd8addaee64eb2c6b6f4a232785984ddd5166273364143c7d",
+        "codereview-context-impact": "7cd85a77e7df1bdac065a81cfef990c7fce5e9bbde93778b0219fc0c291c9f14",
         "codereview-finding-triage": "2d3cba9212929fbb2c01e53b5622f068094d7be69f37ff6b84ce42e24c85e708",
         "codereview-fix-verify": "bc3df83928a6e81e4a79c5150d529271f22dbcf0b9b5014c364550572ce80b6d",
         "codereview-rules": "4b746b19d74ee88cebbd8ac4bce5e248f0bdd20e227b05a70fbe0c6e0072c8fa",
-        "codereview-scan": "16b5800b9c7d0904a213d086d46107247067fbb12a454a39a1377bebf80ee2ba"
+        "codereview-scan": "3291b6c478bf5a4767929977f0410a51b761cea412e4e06c4f2bbfa9feb01297"
       }
     },
     {

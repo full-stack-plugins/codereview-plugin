@@ -2,6 +2,7 @@
 
 ### Requirement: 通用与插件专属技能分离
 CodeReview 插件 SHALL 从独立技能仓及 Alibaba OCR 固定版本分发受管技能，并只在插件本地维护依赖其授权 CLI 的 harness。受管技能 MUST 与本地技能不重名，发布包 MUST 不依赖安装时访问外部仓库。
+插件专属 harness 的技能名和目录 MUST 为 `codereview-harness`，并在本地技能清单中声明；它 MUST NOT 进入外部技能锁。
 
 #### Scenario: 安装发布插件
 - **WHEN** 宿主加载 CodeReview 发布包

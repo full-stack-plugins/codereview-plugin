@@ -1,6 +1,6 @@
 # 验收记录：consent-based-review（v0.1.0 历史基线）
 
-日期：2026-09-23。OpenSpec schema：spec-driven；授权行为事实源为 `openspec/changes/consent-based-review/`。下述 111 项测试和 0.1.0 清单属于首版历史基线，**不是当前 0.2.0 的执行证据**；真实宿主/模型验收仍未完成。
+日期：2026-09-23。OpenSpec schema：spec-driven；授权行为事实源为 `openspec/changes/consent-based-review/`。下述 111 项测试和 0.1.0 清单属于首版历史基线，**不是当前版本的执行证据**；真实宿主/模型验收仍未完成。
 
 ## 已实际执行
 
@@ -60,7 +60,7 @@
 
 其余 23 项有本地实现与验证证据。源码提交、版本 tag、GitHub Release、市场登记和实际宿主运行分别需要独立核对；本记录不能代替真实 OCR 或三端安装验收。FlowGuard/CodeGuard 的原有工作不在本轮修改范围。
 
-## v0.2.0 技能整合的当前证据
+## v0.2.0 技能整合的发布基线
 
 规格事实源为 `openspec/changes/integrate-codereview-skills/`；此变更只约束技能分发与路由，不覆盖上文授权规格。2026-09-23 本地执行：
 
@@ -75,6 +75,10 @@
 | `openspec validate integrate-codereview-skills --strict` | Change is valid |
 
 本机 Codex `quick_validate.py` 对 Alibaba 原版两个技能的可选 `compatibility` frontmatter 字段报 schema 不支持；没有为通过本机工具而改写上游受管副本。官方技能的原版一致性由 vendor 哈希验证；实际 Codex 发现/加载仍待新环境验收。
+
+## v0.2.1 `codereview-harness` 命名修正
+
+插件专属技能从 `skills/codereview` 更名为 `skills/codereview-harness`，更新了本地清单、Hook 提示和回归测试。独立技能仓的两个路由引用已在 `v0.1.1` 修正，插件锁随之更新；七个受管技能仍保持来源可追溯。`/opt/anaconda3/bin/python3 -m pytest -q` 为 **114 passed**；技能 quick_validate、本地结构校验、受管技能离线校验和 OpenSpec strict 校验通过。这些检查不代表已安装宿主包含新名称；tag、Release、市场和 CI 分别核对。
 
 ## 剩余风险
 

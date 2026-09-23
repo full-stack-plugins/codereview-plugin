@@ -7,7 +7,7 @@ flowchart LR
   U[Alibaba OCR v1.12.9\n官方两个技能] --> L[skills.lock.json]
   S[full-stack-skills/codereview-skills\n五个通用技能] --> L
   L --> V[插件发布包的受管快照]
-  H[插件本地 codereview harness] --> P[授权/暂存快照/报告状态]
+  H[插件本地 codereview-harness] --> P[授权/暂存快照/报告状态]
   V --> M[手动审查与增强工作流]
   P --> M
 ```
@@ -16,7 +16,7 @@ flowchart LR
 
 ## 入口路由
 
-- **AI 即将提交**：只由 `codereview` harness 的 `prepare → decide → review → report → disposition` 流程协调。官方技能可提供理解 OCR 模式的知识，但不能直接对真实工作区运行通用 `ocr review` 冒充候选快照审查。
+- **AI 即将提交**：只由 `codereview-harness` 的 `prepare → decide → review → report → disposition` 流程协调。官方技能可提供理解 OCR 模式的知识，但不能直接对真实工作区运行通用 `ocr review` 冒充候选快照审查。
 - **用户主动审查工作区、分支或提交**：可使用上游 `open-code-review`（OCR-managed）或 `open-code-review-delegate`（宿主推理），但须先披露实际范围和推理方。其默认工作区范围含暂存、未暂存和未跟踪内容，不复用提交授权。
 - **增强工作流**：`codereview-context-impact` 整理背景；`codereview-finding-triage` 核实发现；`codereview-fix-verify` 仅在修复授权下写代码；`codereview-rules` 仅在规则变更授权下写规则；`codereview-scan` 仅对显式同意的完整文件范围运行。
 

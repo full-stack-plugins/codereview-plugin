@@ -3,7 +3,7 @@
 提交前**可选授权**的语义代码审查插件，整合 Open Code Review（OCR）的正式 CLI 接口。
 默认先问用户，拒绝后当前会话静默；审查报告是建议，不是强制通过门禁。
 
-状态：`v0.2.0` 技能整合版本。已实现本地内核与离线验证；真实模型调用、Codex/ZCode/Kimi 安装加载仍为 **UNVERIFIED**。正式发布身份以 [GitHub Releases](https://github.com/full-stack-plugins/codereview-plugin/releases) 和 [Full Stack 插件市场](https://github.com/partme-ai/full-stack-plugins) 为准。
+状态：`v0.2.1` 将插件专属技能明确命名为 `codereview-harness`，并锁定 `codereview-skills v0.1.1`。已实现本地内核与离线验证；真实模型调用、Codex/ZCode/Kimi 安装加载仍为 **UNVERIFIED**。正式发布身份以 [GitHub Releases](https://github.com/full-stack-plugins/codereview-plugin/releases) 和 [Full Stack 插件市场](https://github.com/partme-ai/full-stack-plugins) 为准。
 
 ## 使用体验
 
@@ -46,11 +46,11 @@ flowchart LR
 
 ## 技能来源与场景
 
-插件分发 **8 个技能**：Alibaba OCR 官方两个技能、独立 [`codereview-skills`](https://github.com/full-stack-skills/codereview-skills) 五个增强技能，以及插件本地的 `codereview` harness。外部七个由 [`skills.lock.json`](skills.lock.json) 固定到版本 tag、提交和逐技能摘要；只允许在来源仓修改。插件安装包自包含技能快照，不需要运行时再下载。
+插件分发 **8 个技能**：Alibaba OCR 官方两个技能、独立 [`codereview-skills`](https://github.com/full-stack-skills/codereview-skills) 五个增强技能，以及插件本地的 `codereview-harness`。外部七个由 [`skills.lock.json`](skills.lock.json) 固定到版本 tag、提交和逐技能摘要；只允许在来源仓修改。插件安装包自包含技能快照，不需要运行时再下载。
 
 | 场景 | 入口 |
 | --- | --- |
-| AI 即将提交、询问仅本次/本会话/静默、审查暂存候选 | 本地 `codereview` harness；始终先按本插件授权协议执行 |
+| AI 即将提交、询问仅本次/本会话/静默、审查暂存候选 | 本地 `codereview-harness`；始终先按本插件授权协议执行 |
 | 用户主动审查工作区、分支、单提交，OCR 调用其配置模型 | 官方 `open-code-review`；这是独立手动审查，不继承提交授权 |
 | 用户主动审查，由当前宿主模型执行 | 官方 `open-code-review-delegate`；OCR 只选文件和规则 |
 | 跨模块需求/影响、发现核实、授权修复、项目规则、全文件扫描 | `codereview-context-impact`、`codereview-finding-triage`、`codereview-fix-verify`、`codereview-rules`、`codereview-scan` |
@@ -89,14 +89,14 @@ python3 scripts/codereview.py --help
 python3 scripts/codereview.py prepare --request /absolute/private/request.json
 ```
 
-请求字段见[CLI 协议](skills/codereview/references/cli.md)。Delegation 的 `review` 只生成计划，宿主完成语义审查后必须调用 `complete-delegated`；OCR-managed 的 `review` 才由 OCR 调用模型。不要把测试夹具成功理解成真实模型成功。
+请求字段见[CLI 协议](skills/codereview-harness/references/cli.md)。Delegation 的 `review` 只生成计划，宿主完成语义审查后必须调用 `complete-delegated`；OCR-managed 的 `review` 才由 OCR 调用模型。不要把测试夹具成功理解成真实模型成功。
 
 ## 安装、维护与验证边界
 
 - [三端安装与卸载](docs/hosts.md)：目前只提供结构及操作说明，本轮未安装。
 - [验收证据](docs/verification.md)：规格、测试、未完成项对应关系。
 - [OpenSpec 授权变更](openspec/changes/consent-based-review/proposal.md) 与 [技能整合变更](openspec/changes/integrate-codereview-skills/proposal.md)：分别约束审查行为与外部技能分发；真实宿主验收前不归档为全部完成。
-- 插件专属 `codereview` harness 只声明在 `plugin-local-skills.json`，不进入 `skills.lock.json`。
+- 插件专属 `codereview-harness` 只声明在 `plugin-local-skills.json`，不进入 `skills.lock.json`。
 - `.agents/skills/openspec-*` 是项目开发集成，不纳入分发技能清单；`.agents/plugins/marketplace.json` 是仓库级安装入口。
 
 源码、测试和说明采用 Apache-2.0。上游 OCR 作为用户已有的外部程序调用，不打包其二进制。

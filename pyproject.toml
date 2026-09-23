@@ -1,6 +1,6 @@
 [project]
 name = "codereview-plugin"
-version = "0.2.0"
+version = "0.2.1"
 description = "用户授权驱动的提交前语义审查"
 requires-python = ">=3.11"
 

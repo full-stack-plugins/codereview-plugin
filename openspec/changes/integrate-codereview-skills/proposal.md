@@ -8,7 +8,7 @@
 
 - 建立 `full-stack-skills/codereview-skills`，先交付五个与 OCR 引擎互补的通用技能。
 - 对 Alibaba 官方 `open-code-review` 与 `open-code-review-delegate` 使用正式版本的精确提交锁；不改写上游原文。
-- 插件以校验摘要的 vendor 快照分发七个外部技能；仅本地 `codereview` harness 保留在插件内，明确其入口优先级与授权边界。
+- 插件以校验摘要的 vendor 快照分发七个外部技能；仅本地 `codereview-harness` 保留在插件内，明确其入口优先级与授权边界。
 - 增加技能来源、离线/在线一致性和上游变化检测。更新文档，区分独立安装与插件内调用。
 
 ## Non-Goals
