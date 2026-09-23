@@ -49,3 +49,9 @@ Hook 超时/异常按可选插件降级为 UNVERIFIED，不宣称阻断所有提
 
 记录宿主版本、插件安装版本、session_id 来源；在无敏感信息临时 Git 仓库验证：八个技能发现、官方技能与 harness 的触发路由、SessionStart 不提问、一次暂停、用户未回答不重复、once、session、mute、跨会话重置、提交失败重试、成功后新任务、撤销、工作目录覆盖、三插件共存。
 先验证拒绝路径（零模型请求）；模型路径需单独确认实际端点及允许发送的临时文件。不把 fixture 事件通过记为安装验收通过。
+
+## 2026-09-24 实测记录
+
+- **Codex 0.153.4**：`codex plugin add codereview-plugin@full-stack-plugins` 安装 0.2.1 成功；`codex exec` 首测 commit **未被拦截**——根因是官方 hook 信任边界（未信任钩子静默跳过），加 `--dangerously-bypass-hook-trust` 复测 `hook: PreToolUse Blocked` 拦截成功、披露范围含宿主模型。日常使用须在 TUI 完成信任审查；持久信任的 `trusted_hash` 算法未公开，不手工伪造。
+- **ZCode**：本会话活体证据——两次暂停疑似提交命令（unsupported/can_skip），重复暂停 `notify:false` 不重复发问；`decide once` 后同一逻辑任务不重复授权。安装副本为 0.1.0，升级依赖市场刷新。
+- **Kimi**：本机无 Kimi Code CLI（`~/.local/bin/kimi-cli` 为断链；npm `kimi-code` 是 whitesmith 第三方代理包，非官方，未安装）。未验收，待安装官方 CLI 后补测。

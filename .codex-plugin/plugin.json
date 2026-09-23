@@ -1,6 +1,6 @@
 {
   "name": "codereview-plugin",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
   "homepage": "https://github.com/full-stack-plugins/codereview-plugin",
   "repository": "https://github.com/full-stack-plugins/codereview-plugin",
@@ -16,7 +16,9 @@
     "developerName": "Full Stack Skills / PartMe.AI",
     "category": "Developer Tools",
     "capabilities": [],
-    "defaultPrompt": ["请披露代码外发范围，再询问是否审查本次提交。"],
+    "defaultPrompt": [
+      "请披露代码外发范围，再询问是否审查本次提交。"
+    ],
     "logo": "./assets/official-logo.png",
     "logoDark": "./assets/official-logo.png"
   }

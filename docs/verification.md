@@ -98,7 +98,7 @@
 4. 真实 `result.json` 的 `status` 为 `complete`，`normalize` 原只认想象枚举；已兼容并以真实样例钉契约。
 5. 版本识别兼容 Homebrew 分发的无 `v` 前缀版本串。
 
-`python3 -m pytest -q`：**120 passed**（新增 5 项真实契约/回归测试）。宿主侧新增活体证据：ZCode PreToolUse 在真实会话两次暂停疑似提交命令、重复暂停 `notify:false` 不重复发问；该安装副本提示仍是改名前文案，待随发布更新。Codex/Kimi 安装加载未验收（5.4/7.2 剩余部分）。
+`python3 -m pytest -q`：**120 passed**（新增 5 项真实契约/回归测试）。宿主验收续（2026-09-24）：**Codex** 0.153.4 经市场安装 0.2.1 后 `codex exec` 实测 `hook: PreToolUse Blocked`，提交被拦截返回 ask_user，宿主模型正确纳入披露范围；注意 Codex 的 hook 信任边界——安装/启用后钩子在用户信任审查前静默跳过（首次实测即因此未拦截），自动化可用官方 `--dangerously-bypass-hook-trust`。**ZCode** 本会话两次真实暂停疑似提交命令、重复暂停 `notify:false` 不重复发问（安装副本 0.1.0，待随市场升级）。**Kimi** 本机无 Kimi Code CLI（uv 软链断裂，npm `kimi-code` 系第三方代理包未安装），未验收。两个 OpenSpec 变更已按 2/3 宿主真实证据归档为 `2026-09-24-*`；Kimi 与 Codex 信任审查属已知缺口，不以离线测试替代。
 
 ## 剩余风险
 
