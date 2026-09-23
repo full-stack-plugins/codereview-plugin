@@ -168,6 +168,11 @@ def run_process(args, cwd, env, *, timeout=600, max_bytes=2 * 1024 * 1024, cance
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
+        except PermissionError:
+            # macOS 上父进程退出后，组号可能已不可操作；不以清理错误覆盖真实审查结果。
+            # 若父进程仍在，至少直接终止它，避免 wait 无限阻塞。
+            if process.poll() is None:
+                process.kill()
         process.wait()
         process.stdout.close()
         process.stderr.close()

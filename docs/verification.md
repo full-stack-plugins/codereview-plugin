@@ -78,7 +78,7 @@
 
 ## v0.2.1 `codereview-harness` 命名修正
 
-插件专属技能从 `skills/codereview` 更名为 `skills/codereview-harness`，更新了本地清单、Hook 提示和回归测试。独立技能仓的两个路由引用已在 `v0.1.1` 修正，插件锁随之更新；七个受管技能仍保持来源可追溯。`/opt/anaconda3/bin/python3 -m pytest -q` 为 **114 passed**；技能 quick_validate、本地结构校验、受管技能离线校验和 OpenSpec strict 校验通过。这些检查不代表已安装宿主包含新名称；tag、Release、市场和 CI 分别核对。
+插件专属技能从 `skills/codereview` 更名为 `skills/codereview-harness`，更新了本地清单、Hook 提示和回归测试。独立技能仓的两个路由引用已在 `v0.1.1` 修正，插件锁随之更新；七个受管技能仍保持来源可追溯。macOS CI 暴露已退出子进程的进程组清理可能返回 `PermissionError`；修正为不覆盖原结果，父进程仍存活时直接终止，并加入回归测试。`/opt/anaconda3/bin/python3 -m pytest -q` 为 **115 passed**；技能 quick_validate、本地结构校验、受管技能离线校验和 OpenSpec strict 校验通过。这些检查不代表已安装宿主包含新名称；tag、Release、市场和 CI 分别核对。
 
 ## 剩余风险
 

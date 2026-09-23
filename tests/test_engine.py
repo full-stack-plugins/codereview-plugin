@@ -83,3 +83,16 @@ def test_process_timeout_output_limit_and_cancel(tmp_path):
         assert time.monotonic() - started < 3
     outcome = engine.run_process([sys.executable, "-c", "print('ok')"], tmp_path, os.environ.copy())
     assert outcome == (0, "ok\n", "")
+
+
+def test_completed_process_cleanup_does_not_mask_result_when_group_signal_denied(tmp_path, monkeypatch):
+    engine = importlib.import_module("codereview_core.engine")
+
+    def deny_group_signal(*_args):
+        raise PermissionError("group no longer belongs to this process")
+
+    monkeypatch.setattr(engine.os, "killpg", deny_group_signal)
+    assert engine.run_process([sys.executable, "-c", "print('ok')"], tmp_path, os.environ.copy()) == (0, "ok\n", "")
+    with pytest.raises(ValueError, match="timeout"):
+        engine.run_process([sys.executable, "-c", "import time; time.sleep(5)"],
+                           tmp_path, os.environ.copy(), timeout=.05)
