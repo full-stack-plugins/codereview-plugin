@@ -61,7 +61,8 @@ def test_manifests_have_separate_host_loading_contracts():
     paths = [".codex-plugin/plugin.json", ".zcode-plugin/plugin.json", "kimi.plugin.json"]
     data = [json.loads((ROOT / p).read_text()) for p in paths]
     expected_version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
-    assert {m["version"] for m in data} == {expected_version}
+    # Codex 市场约定允许 X.Y.Z+codex.YYYYMMDD 构建后缀；比较基础版本。
+    assert {m["version"].split("+", 1)[0] for m in data} == {expected_version}
     assert {m["name"] for m in data} == {"codereview-plugin"}
     assert "hooks" not in data[0]
     for manifest in data:

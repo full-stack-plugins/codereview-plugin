@@ -10,7 +10,8 @@ def validate(root):
     for name in [".codex-plugin/plugin.json", ".zcode-plugin/plugin.json", "kimi.plugin.json"]:
         manifest = json.loads((root / name).read_text())
         assert manifest["name"] == "codereview-plugin", name
-        assert manifest["version"] == version, name
+        # Codex 市场约定允许 X.Y.Z+codex.YYYYMMDD 构建后缀（与市场同步工具同规则）。
+        assert manifest["version"] == version or manifest["version"].startswith(version + "+"), name
         assert (root / manifest["skills"]).is_dir(), name
         assert "[TODO:" not in json.dumps(manifest), name
     assert "hooks" not in json.loads((root / ".codex-plugin/plugin.json").read_text())
