@@ -19,9 +19,9 @@ def test_unrelated_shell_composition_not_intercepted(command, repo):
 
 
 def test_manual_after_mute_restores_no_automatic_reminders(runtime):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "mute", "user:1", task["scope"])
-    manual = runtime.prepare(manual=True)
+    manual = runtime.prepare("git push origin main", manual=True)
     assert manual["task_id"] == task["task_id"]
     runtime.decide(manual["task_id"], "once", "user:2", manual["scope"])
     assert runtime.review(manual["task_id"])["execution_status"] == "success"
@@ -42,15 +42,15 @@ def test_prepare_does_not_materialize_blob_content(runtime, monkeypatch):
         assert args[:2] != ("cat-file", "blob")
         return original(repo, *args, **kwargs)
     monkeypatch.setattr(module, "git", guard)
-    assert runtime.prepare()["action"] == "ask_user"
+    assert runtime.prepare("git push origin main")["action"] == "ask_user"
 
 
 def test_cleanup_revokes_only_current_session_reports(runtime):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.review(task["task_id"])
     other = Runtime(runtime.store.root, "kimi", "other", runtime.repo, ocr=runtime.ocr)
-    other.prepare()
+    other.prepare("git push origin main")
     data = other.store.path.read_bytes()
     runtime.cleanup("user:2")
     assert runtime.store.read()["tasks"] == {}

@@ -25,13 +25,16 @@ def runtime(repo, tmp_path):
     environment["FIXTURE_DELAY"] = ".2"
     ocr = engine.OCR([sys.executable, str(fixture)], config_path=config, environment=environment)
     (repo / "a.py").write_text("candidate\n")
-    git(repo, "add", ".")
+    # 新语义下 commit 走 remind（无 task），老 codereview 流程测试改为 push。
+    # push 路径需要 HEAD 存在，但不允许抢 stage（老测试依赖后续 add + commit），
+    # 所以 --allow-empty 创建 HEAD 占位，不 add a.py。
+    git(repo, "commit", "--allow-empty", "-qm", "base")
     return api.Runtime(tmp_path / "state", "codex", "session", repo, ocr=ocr,
                        execution_mode="ocr-managed")
 
 
 def test_end_to_end_consent_review_proceed_then_new_task(runtime, repo):
-    pending = runtime.prepare("git commit -m x")
+    pending = runtime.prepare("git push origin main")
     assert pending["action"] == "ask_user"
     with pytest.raises(ValueError, match="not_authorized"):
         runtime.review(pending["task_id"])
@@ -40,37 +43,37 @@ def test_end_to_end_consent_review_proceed_then_new_task(runtime, repo):
     assert report["execution_status"] == "success"
     assert report["engine_version"] == "1.12.9"
     assert report["coverage_status"] == "limited"
-    assert runtime.prepare("git commit -m x")["action"] == "report_ready"
+    assert runtime.prepare("git push origin main")["action"] == "report_ready"
     runtime.proceed(pending["task_id"], "user:2")
-    assert runtime.prepare("git commit -m x")["action"] == "allow"
-    git(repo, "commit", "-qm", "done")
+    assert runtime.prepare("git push origin main")["action"] == "allow"
+    git(repo, "commit", "--allow-empty", "-qm", "done")
     assert runtime.post_commit(pending["task_id"], success=True)
     (repo / "a.py").write_text("next\n")
     git(repo, "add", ".")
-    assert runtime.prepare("git commit -m y")["action"] == "ask_user"
+    assert runtime.prepare("git push origin feature/y")["action"] == "ask_user"
 
 
 def test_changed_index_cannot_reuse_report_or_disposition(runtime, repo):
-    task = runtime.prepare("git commit -m x")
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "session", "user:1", task["scope"])
     runtime.review(task["task_id"])
     runtime.proceed(task["task_id"], "user:2")
     (repo / "a.py").write_text("changed\n")
     git(repo, "add", ".")
-    assert runtime.prepare("git commit -m x")["action"] == "review_required"
+    assert runtime.prepare("git push origin main")["action"] == "review_required"
 
 
 def test_mute_does_not_need_engine_or_valid_snapshot(runtime, repo, tmp_path):
-    task = runtime.prepare("git commit -m x")
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "mute", "user:1", task["scope"])
     runtime.ocr.command = ["missing-engine"]
     (repo / "link").symlink_to(tmp_path / "private")
     git(repo, "add", "link")
-    assert runtime.prepare("git commit -m x")["action"] == "allow"
+    assert runtime.prepare("git push origin main")["action"] == "allow"
 
 
 def test_concurrent_review_is_single_flight(runtime, tmp_path):
-    task = runtime.prepare("git commit -m x")
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     results = []
     def run():
@@ -89,7 +92,7 @@ def test_concurrent_review_is_single_flight(runtime, tmp_path):
 
 def test_cancel_stops_running_review_and_late_write(runtime, tmp_path):
     runtime.ocr.environment["FIXTURE_DELAY"] = "5"
-    task = runtime.prepare("git commit -m x")
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     reports = []
     job = threading.Thread(target=lambda: reports.append(runtime.review(task["task_id"])))
@@ -102,17 +105,17 @@ def test_cancel_stops_running_review_and_late_write(runtime, tmp_path):
     job.join(3)
     assert not job.is_alive()
     assert reports[0]["execution_status"] == "cancelled"
-    assert runtime.prepare("git commit -m x")["action"] == "ask_user"
+    assert runtime.prepare("git push origin main")["action"] == "ask_user"
 
 
 def test_explicit_recovery_quarantines_only_session_state(runtime):
-    runtime.prepare("git commit -m x")
+    runtime.prepare("git push origin main")
     runtime.store.path.write_text("broken")
     with pytest.raises(ValueError, match="corrupt_state"):
-        runtime.prepare("git commit -m x")
+        runtime.prepare("git push origin main")
     restored = runtime.recover("user:1", mute=True)
     assert restored["preference"] == "MUTED"
-    assert runtime.prepare("git commit -m x")["action"] == "allow"
+    assert runtime.prepare("git push origin main")["action"] == "allow"
 
 
 def test_unknown_protocol_rejected_before_mutation(runtime):
@@ -124,7 +127,7 @@ def test_unknown_protocol_rejected_before_mutation(runtime):
 
 def test_endpoint_change_between_prepare_and_engine_cannot_leak(runtime, tmp_path):
     from codereview_core.engine import Endpoint
-    task = runtime.prepare("git commit -m x")
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     original = runtime.ocr.configuration()
     changed = Endpoint(dict(original.public, endpoint="https://unexpected.invalid", config_digest="different"),
@@ -141,7 +144,7 @@ def test_endpoint_change_between_prepare_and_engine_cannot_leak(runtime, tmp_pat
 
 
 def test_failed_engine_can_be_explicitly_retried(runtime):
-    task = runtime.prepare("git commit -m x")
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     failed = runtime.review(task["task_id"], timeout=.01)
     assert failed["execution_status"] == "failed"

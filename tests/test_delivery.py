@@ -26,7 +26,7 @@ def child_review(state, repo_path, config, environment, task_id, queue):
 
 
 def test_multiprocess_single_flight(runtime, tmp_path):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     context = multiprocessing.get_context("spawn")
     queue = context.Queue()
@@ -80,7 +80,7 @@ raise SystemExit(main())
 
 
 def test_missing_required_capabilities_and_binary_never_review(runtime, tmp_path):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.ocr.command = [sys.executable, "-c", "print('open-code-review v99.0.0')"]
     assert runtime.review(task["task_id"])["error"] == "managed_review_not_supported"
@@ -117,7 +117,7 @@ def test_fsmonitor_and_external_diff_never_run(repo):
 
 
 def test_report_instructions_are_data_not_modifications_or_consent(runtime):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     before = (git(runtime.repo, "rev-parse", "HEAD"), (runtime.repo / ".git/index").read_bytes(),
               (runtime.repo / "a.py").read_bytes())
@@ -127,16 +127,16 @@ def test_report_instructions_are_data_not_modifications_or_consent(runtime):
     report = runtime.review(task["task_id"])
     assert "[REDACTED]" in report["findings"][0]["content"]
     assert "fake-only" not in runtime.store.path.read_text()
-    assert runtime.prepare()["action"] == "report_ready"
+    assert runtime.prepare("git push origin main")["action"] == "report_ready"
     assert before == (git(runtime.repo, "rev-parse", "HEAD"), (runtime.repo / ".git/index").read_bytes(),
                       (runtime.repo / "a.py").read_bytes())
     runtime.skip(task["task_id"], "user:2")
-    assert runtime.prepare()["action"] == "allow"
+    assert runtime.prepare("git push origin main")["action"] == "allow"
     assert "passed" not in runtime.evidence(task["task_id"])
 
 
 def test_all_filtered_preview_never_claims_success_or_calls_model(runtime, tmp_path):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.ocr.environment["FIXTURE_PREVIEW"] = json.dumps({"files": [
         {"path": "a.py", "will_review": False, "exclude_reason": "unsupported"}],

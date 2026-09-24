@@ -13,7 +13,7 @@ from test_git_snapshot import git, repo
 
 
 def test_running_request_returns_existing_task(runtime, tmp_path):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.ocr.environment["FIXTURE_DELAY"] = "1"
     result = []
@@ -30,7 +30,7 @@ def test_running_request_returns_existing_task(runtime, tmp_path):
 
 
 def test_abandoned_run_is_explicitly_retried(runtime):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     with runtime.store.transaction() as state:
         old = consent.begin(state, task["task_id"])
@@ -39,10 +39,10 @@ def test_abandoned_run_is_explicitly_retried(runtime):
 
 
 def test_cancel_ends_single_commit_authorization(runtime):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.cancel(task["task_id"], "user:2")
-    next_task = runtime.prepare()
+    next_task = runtime.prepare("git push origin main")
     assert next_task["action"] == "ask_user" and next_task["task_id"] != task["task_id"]
 
 
@@ -51,7 +51,7 @@ def test_command_workdir_is_respected(runtime, tmp_path):
     other.mkdir()
     git(other, "init", "-q")
     payload = {"hook_event_name": "PreToolUse", "session_id": "session", "cwd": str(runtime.repo),
-               "tool_input": {"cmd": "git commit -m x", "workdir": str(other)}, "tool_name": "exec_command"}
+               "tool_input": {"cmd": "git push origin main", "workdir": str(other)}, "tool_name": "exec_command"}
     _, output = handle("codex", payload, runtime=runtime)
     state = json.loads(output.split("\n", 1)[1])
     assert state["scope"]["worktree"] == str(other.resolve())
@@ -70,7 +70,7 @@ def test_provider_config_uses_correct_section_and_preserves_required_key(tmp_pat
 
 
 def test_post_failure_keeps_authorization(runtime):
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     assert not runtime.post_commit(task["task_id"], success=False)
-    assert runtime.prepare()["action"] == "review_required"
+    assert runtime.prepare("git push origin main")["action"] == "review_required"

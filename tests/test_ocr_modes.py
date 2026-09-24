@@ -102,7 +102,7 @@ def test_delegated_runtime_requires_complete_coverage_and_cleans_snapshot(repo, 
     ocr = OCR(fixture_command(), config_path=tmp_path / "missing.json", environment=os.environ.copy())
     runtime = Runtime(tmp_path / "state", "codex", "session", repo, ocr=ocr,
                       execution_mode="delegated", host_model="gpt-test")
-    pending = runtime.prepare("git commit -m x")
+    pending = runtime.prepare("git push origin main")
     runtime.decide(pending["task_id"], "once", "user:1", pending["scope"])
 
     plan = runtime.review(pending["task_id"])
@@ -136,14 +136,14 @@ def test_candidate_change_invalidates_delegate_plan_and_cleans_snapshot(repo, tm
                       ocr=OCR(fixture_command(), config_path=tmp_path / "missing.json",
                               environment=os.environ.copy()),
                       execution_mode="delegated", host_model="gpt-test")
-    pending = runtime.prepare()
+    pending = runtime.prepare("git push origin main")
     runtime.decide(pending["task_id"], "once", "user:1", pending["scope"])
     plan = runtime.review(pending["task_id"])
     snapshot = Path(plan["snapshot_path"])
 
     (repo / "a.py").write_text("changed\n")
     git(repo, "add", ".")
-    assert runtime.prepare()["action"] == "review_required"
+    assert runtime.prepare("git push origin main")["action"] == "review_required"
     assert not snapshot.exists()
     with pytest.raises(ValueError, match="delegation_not_active"):
         runtime.complete_delegated(pending["task_id"], {
@@ -207,7 +207,7 @@ def test_review_requires_matching_execution_mode(repo, tmp_path):
     ocr = OCR(fixture_command(), config_path=tmp_path / "missing.json", environment=os.environ.copy())
     delegated = Runtime(tmp_path / "state", "codex", "session", repo, ocr=ocr,
                         execution_mode="delegated", host_model="gpt-test")
-    pending = delegated.prepare()
+    pending = delegated.prepare("git push origin main")
     delegated.decide(pending["task_id"], "once", "user:1", pending["scope"])
     managed = Runtime(tmp_path / "state", "codex", "session", repo, ocr=ocr,
                       execution_mode="ocr-managed", host_model="gpt-test")
@@ -227,7 +227,7 @@ def test_delegated_rejects_enabled_telemetry_config(repo, tmp_path):
     runtime = Runtime(tmp_path / "state", "codex", "session", repo,
                       ocr=OCR(fixture_command(), config_path=config, environment=os.environ.copy()),
                       execution_mode="delegated", host_model="gpt-test")
-    pending = runtime.prepare()
+    pending = runtime.prepare("git push origin main")
     runtime.decide(pending["task_id"], "once", "user:1", pending["scope"])
     # 引擎侧拒绝按既定模式转为诚实失败报告，错误码保留；未调用任何引擎子进程。
     report = runtime.review(pending["task_id"])

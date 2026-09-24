@@ -27,7 +27,9 @@ def execute(action, request):
                       host_model=request.get("model"))
     task, source = request.get("task_id"), request.get("source")
     if action in {"prepare", "manual"}:
-        return runtime.prepare(request.get("command", "git commit"), manual=action == "manual")
+        # 默认命令是 push：新语义下 commit 只提醒（remind，无 task），
+        # 真正进入授权/审查流程的是 push。
+        return runtime.prepare(request.get("command", "git push origin main"), manual=action == "manual")
     if action == "status":
         state = runtime.store.read()
         return {"version": 1, "preference": state["preference"], "revision": state["revision"],

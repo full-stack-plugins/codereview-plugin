@@ -40,7 +40,7 @@ def handle(host, payload, *, runtime=None):
     if event in {"PreToolUse", "PostToolUse"}:
         if not isinstance(command, str) or _helper(command):
             return 0, ""
-        if not isinstance(cwd, str) or classify(command, cwd)["kind"] == "other":
+        if not isinstance(cwd, str):
             return 0, ""
     if not session or not cwd:
         return 0, "CodeReview UNVERIFIED: 缺少稳定 session_id/cwd，不能恢复授权；仅支持显式手动审查。"
@@ -73,11 +73,21 @@ def handle(host, payload, *, runtime=None):
                     if task.get("pending_call") == call and task.get("command") == command:
                         runtime.post_commit(task["id"], success=True)
         return 0, ""
+    parsed = classify(command, cwd)
+    if parsed["kind"] == "other":
+        return 0, ""
+    if parsed["kind"] == "commit":
+        result = runtime.prepare(command)
+        if result["action"] == "remind":
+            message = ("CodeReview: 检测到 git commit，建议在 push 之前运行一次审查。"
+                       " 当前仅 inject 提醒，未拦截；如需一次性审查，使用 codereview-harness 技能；"
+                       "如需跳过本次通知，回复 '跳过 codereview'。")
+            return 0, json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
+                                                        "additionalContext": message}}, ensure_ascii=True)
+        return 0, ""
     effective_command = command
-    if Path(cwd).resolve() != runtime.repo:
-        parsed = classify(command, cwd)
-        if parsed["kind"] == "commit":
-            effective_command = "git -C " + shlex.quote(parsed["repo"]) + " commit"
+    if Path(cwd).resolve() != runtime.repo and parsed["kind"] == "push":
+        effective_command = "git -C " + shlex.quote(parsed["repo"]) + " push"
     result = runtime.prepare(effective_command)
     if result["action"] == "allow":
         call = payload.get("tool_use_id", payload.get("tool_call_id", payload.get("toolUseId")))
@@ -87,7 +97,7 @@ def handle(host, payload, *, runtime=None):
                 consent.get_task(state, result["task_id"])["command"] = command
         return 0, ""
     context = {"version": 1, "host": host, "session": session, "repo": cwd, **result}
-    return 2, ("CodeReview 暂停本次提交，未执行审查。使用 codereview-harness 编排技能处理下列状态。"
+    return 2, ("CodeReview 暂停本次 git push，未执行审查。使用 codereview-harness 编排技能处理下列状态。"
                "首次询问：仅本次审查 / 当前会话自动审查 / 本会话不再提醒。"
                "notify=false 时不要重复问同一问题，等待原决定；用户可明确 skip 当前任务。"
                "结果仅建议，不代表 FlowGuard/CodeGuard 放行。\n" + json.dumps(context, ensure_ascii=True))

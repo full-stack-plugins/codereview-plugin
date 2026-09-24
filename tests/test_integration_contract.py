@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_consumer_requires_current_evidence_but_never_grants_acceptance(runtime):
     protocol = importlib.import_module("codereview_core.protocol")
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     skipped = runtime.evidence(task["task_id"])
     assert protocol.evidence_status(skipped, task["fingerprint"]) == "not_reviewed"
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
@@ -38,7 +38,7 @@ def test_actual_hook_process_pauses_on_stderr(host, repo, tmp_path):
     env = os.environ.copy()
     env["CODEREVIEW_STATE_DIR"] = str(tmp_path / "state")
     payload = {"hook_event_name": "PreToolUse", "session_id": "s", "cwd": str(repo),
-               "tool_name": "Bash", "tool_input": {"command": "git commit -m x"}, "tool_call_id": "k1"}
+               "tool_name": "Bash", "tool_input": {"command": "git push origin main"}, "tool_call_id": "k1"}
     result = subprocess.run([sys.executable, str(ROOT / "hooks/entry.py"), "--host", host],
                             input=json.dumps(payload), text=True, capture_output=True, env=env)
     assert result.returncode == 2 and "CodeReview" in result.stderr and not result.stdout
@@ -49,7 +49,7 @@ def test_host_context_and_stop_summary_are_not_authorization_questions(runtime):
     payload = {"session_id": "session", "cwd": str(runtime.repo)}
     code, context = handle("codex", dict(payload, hook_event_name="SessionStart"), runtime=runtime)
     assert code == 0 and "UNVERIFIED" in context and "codereview-harness" in context
-    task = runtime.prepare()
+    task = runtime.prepare("git push origin main")
     runtime.decide(task["task_id"], "once", "user:1", task["scope"])
     runtime.review(task["task_id"])
     code, summary = handle("codex", dict(payload, hook_event_name="Stop"), runtime=runtime)

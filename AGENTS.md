@@ -1,5 +1,7 @@
 # CodeReview 插件维护约束
 
+- 拦截语义基线：`git push` 是唯一暂停点（ask_user / exit 2）；`git commit` 走 remind（exit 0 + additionalContext）；其它 Git 命令 kind=other 完全放行。改动 classify / hosts.handle / runtime.prepare 时必须维持这一三分流，并有 test_cli_hooks.py 的对应覆盖。
+
 - `skills.lock.json` 的两个外部来源分别是 `full-stack-skills/codereview-skills` 与 `alibaba/open-code-review`。受管的七个 `skills/*` 目录不得在插件仓直接修改；先在来源仓发布不可变版本，再用 `python3 scripts/vendor/skill_vendor.py update` 更新 lock 和发布快照。
 - 插件本地 `skills/codereview-harness` 是提交前授权、暂存快照、报告状态和用户处置的 harness，显式登记在 `plugin-local-skills.json`，绝不放进受管锁。Hook、CLI、宿主适配和证据协议也只在插件仓维护。
 - 提交前必须运行 `python3 scripts/vendor/skill_vendor.py check --offline`、在线 `check`、`python3 scripts/validate_local.py` 和受影响测试。不要把官方技能的手动工作区审查当成本插件候选提交审查。

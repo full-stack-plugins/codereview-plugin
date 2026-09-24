@@ -35,7 +35,15 @@ def git(repo, *args, data=None, optional=False):
 
 
 def classify(command, cwd):
-    """只支持已知普通提交参数；复杂命令由智能体拆解，不尝试执行解析。"""
+    """分类 Git 调用，决定钩子后续动作。
+
+    返回的 kind 决定 hosts.handle 的行为：
+    - "push":        严格 ask_user 拦截（git push 是真正外发的动作，必须 codereview 授权）
+    - "commit":      仅 inject 提醒，不拦截（commit 是本地动作，host 工具链不应被错误拒）
+    - "unsupported": 复杂 / 动态命令，调用方应拆分暂存或明确 skip
+    - "other":       其他命令（git add / reset / status / log / checkout / branch ...），
+                    完全放行，钩子连提醒都不发，避免噪音
+    """
     unsupported = {"kind": "unsupported", "reason": "split_command_or_explicitly_skip"}
     if not isinstance(command, str) or len(command) > 32768:
         return unsupported
@@ -45,18 +53,24 @@ def classify(command, cwd):
         return unsupported
     if not tokens:
         return {"kind": "other"}
-    # 不把任意管道/变量误当成提交。动态隐藏的 Git 调用不在可证明覆盖范围内。
-    if not any("commit" in token for token in tokens):
+    # 第一道闸：命令里没有任何 commit / push 语义就完全放行，
+    # 不因引号、变量或管道符号把无关命令误判为 unsupported。
+    if not any(("commit" in token or "push" in token) for token in tokens):
         return {"kind": "other"}
     if any(x in command for x in ("$", "`", "\n")):
         return unsupported
-    # 非动态的输出命令不因引号中的 git commit 而触发。
+    # echo / printf 仅打印命令内容，不真正执行；引号里有 git commit 也不当 commit 触发。
     if tokens[0] in {"echo", "printf"} and not any(c in command for c in ";|&<>"):
         return {"kind": "other"}
-    if any(c in command for c in ";|&<>"):
+    if any(c in command for c in (";", "|", "&", "<", ">")):
         return unsupported
+    # 非 git 命令：除非确实含 "commit"/"push" 子串（很少见），否则直接放行。
+    # 注意：用子串匹配（"commit" in t），不是精确匹配；
+    # 这与 hooks 入口的早期返回一致。
     if Path(tokens[0]).name != "git":
-        return unsupported if any("commit" in t for t in tokens) else {"kind": "other"}
+        if any(("commit" in t or "push" in t) for t in tokens):
+            return unsupported
+        return {"kind": "other"}
     tokens.pop(0)
     repo = Path(cwd)
     while len(tokens) >= 2 and tokens[0] == "-C":
@@ -66,19 +80,46 @@ def classify(command, cwd):
         return {"kind": "other"}
     if tokens[0].startswith("-"):
         return unsupported
-    if tokens.pop(0) != "commit":
-        return {"kind": "other"}
-    while tokens:
-        option = tokens.pop(0)
-        if option in {"-m", "--message"}:
-            if not tokens:
-                return unsupported
-            tokens.pop(0)
-        elif option.startswith("--message=") or (option.startswith("-m") and len(option) > 2):
-            continue
-        elif option not in {"-q", "--quiet", "-v", "--verbose", "--no-verify", "--allow-empty"}:
+    sub = tokens.pop(0)
+    # push 分支：仅识别普通 push；--force / --mirror / --tags 等都视为普通 push 走 codereview。
+    if sub == "push":
+        unsupported_push_opts = {
+            "--all", "--mirror", "--tags", "--prune", "--atomic", "--push-option",
+        }
+        while tokens:
+            option = tokens.pop(0)
+            if option in {"-q", "--quiet", "-v", "--verbose", "-f", "--force",
+                          "--force-with-lease", "--no-verify", "--no-tags", "--follow-tags",
+                          "-u", "--set-upstream", "--delete", "--dry-run", "--atomic",
+                          "--no-atomic", "--ipv4", "--ipv6", "--thin", "--no-thin",
+                          "--receive-pack", "--exec", "--upload-pack", "--repo"}:
+                continue
+            if option.startswith("--receive-pack=") or option.startswith("--repo=") \
+               or option.startswith("--push-option=") or option.startswith("--exec=") \
+               or option.startswith("--upload-pack="):
+                continue
+            if option.startswith("--force-with-lease="):
+                continue
+            # 远程名 / 引用名（如 origin main）直接放过
+            if not option.startswith("-"):
+                continue
             return unsupported
-    return {"kind": "commit", "repo": str(repo.resolve())}
+        return {"kind": "push", "repo": str(repo.resolve())}
+    if sub == "commit":
+        while tokens:
+            option = tokens.pop(0)
+            if option in {"-m", "--message"}:
+                if not tokens:
+                    return unsupported
+                tokens.pop(0)
+            elif option.startswith("--message=") or (option.startswith("-m") and len(option) > 2):
+                continue
+            elif option in {"-q", "--quiet", "-v", "--verbose", "--no-verify", "--allow-empty"}:
+                continue
+            else:
+                return unsupported
+        return {"kind": "commit", "repo": str(repo.resolve())}
+    return {"kind": "other"}
 
 
 def _safe_path(raw):

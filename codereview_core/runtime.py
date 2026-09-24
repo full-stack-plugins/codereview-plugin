@@ -59,16 +59,32 @@ class Runtime:
             # 不扩大删除范围；不安全路径留给显式诊断处理。
             pass
 
-    def prepare(self, command="git commit", *, manual=False):
-        """只准备状态，不触发引擎；静默路径不依赖引擎或快照支持。"""
+    def prepare(self, command="git push origin main", *, manual=False):
+        """只准备状态，不触发引擎；静默路径不依赖引擎或快照支持。
+
+        返回 action 含义：
+        - "allow"   直接放行（普通命令或已 MUTED）
+        - "remind"  本地 commit 提醒：创建 task 但不让 hooks.handle 阻塞
+                    （hooks.handle 看到 action=remind 时 return 0 + inject 提醒，
+                    不会触发 ask_user 分支）
+        - "ask_user" / "report_ready" / "review_required" 真实 push 场景
+                    完整 codereview 授权流程
+        - "unsupported" 复杂 / 动态命令，调用方拆分暂存或 skip
+        """
         parsed = classify(command, self.repo)
         if parsed["kind"] == "other":
             return {"version": 1, "action": "allow", "reason": "not_a_commit", "notify": False}
+        # commit 是本地动作，绝不阻塞；MUTED 时连提醒都不发
+        if parsed["kind"] == "commit":
+            if self.store.read()["preference"] == "MUTED":
+                return {"version": 1, "action": "allow", "reason": "muted", "notify": False}
+            return {"version": 1, "action": "remind", "reason": "commit_reminder",
+                    "kind": "commit", "notify": True}
         state = self.store.read()
         if not manual and state["preference"] == "MUTED" and not any(t["authorized"] for t in state["tasks"].values()):
             return {"version": 1, "action": "allow", "reason": "muted", "notify": False}
         scope = self._scope(parsed.get("repo"))
-        unsupported = parsed["kind"] != "commit"
+        unsupported = parsed["kind"] not in {"commit", "push"}
         try:
             if unsupported:
                 raise ValueError("unsupported_command")
