@@ -1,6 +1,6 @@
 {
   "name": "codereview-plugin",
-  "version": "0.2.2+codex.20260924",
+  "version": "0.3.0+codex.20260924",
   "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
   "homepage": "https://github.com/full-stack-plugins/codereview-plugin",
   "repository": "https://github.com/full-stack-plugins/codereview-plugin",
