@@ -1,5 +1,14 @@
 # CodeReview Plugin
 
+## Plugin marketplaces
+
+This plugin belongs to **Full-stack development**.
+
+| Category | Marketplace | Purpose |
+| --- | --- | --- |
+| Full-stack development | [Full Stack Plugins](https://github.com/partme-ai/full-stack-plugins) | Architecture and UI design, code understanding, quality checks, code review, workflow governance, and server operations |
+| AIGC content creation | [Full AIGC Plugins](https://github.com/partme-ai/full-aigc-plugins) | Image, video, audio, music, 3D, and multimodal content creation |
+
 提交前**可选授权**的语义代码审查插件，整合 Open Code Review（OCR）的正式 CLI 接口。
 默认先问用户，拒绝后当前会话静默；审查报告是建议，不是强制通过门禁。
 
