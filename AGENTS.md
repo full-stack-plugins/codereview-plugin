@@ -6,3 +6,13 @@
 - 插件本地 `skills/codereview-harness` 是提交前授权、暂存快照、报告状态和用户处置的 harness，显式登记在 `plugin-local-skills.json`，绝不放进受管锁。Hook、CLI、宿主适配和证据协议也只在插件仓维护。
 - 提交前必须运行 `python3 scripts/vendor/skill_vendor.py check --offline`、在线 `check`、`python3 scripts/validate_local.py` 和受影响测试。不要把官方技能的手动工作区审查当成本插件候选提交审查。
 - 已发布 tag 不得移动；任何市场可见的插件更新需要新版本、正式 Release、市场清单同步。真实 OCR 模型调用和 Codex/ZCode/Kimi 运行验收不得由离线测试代替。
+
+<!-- partme-agent-plugin-policy:v1 -->
+## Partme Agent Plugin Architecture Rules v1
+
+- 组织级架构规范（跨 `full-aigc-plugins` 与 `full-stack-plugins` 的唯一事实源）：[Partme Agent Plugin Architecture Rules v1](https://github.com/full-aigc-plugins/.github/blob/main/docs/standards/partme-agent-plugin-architecture-rules-v1.md)。
+- **Harness 可选**：默认直接使用 Skills + CLI/MCP；只有确有必要时才使用最多一个可发现的 `skills/*-harness/SKILL.md`，其中的 `scripts/harness.py` 同样可选。
+- 不重复开发宿主 Agent Runtime、原生 CLI/MCP 业务执行器、持久数据库或权威任务状态。正式功能必须具备可核验的 Agent → Skill/Command → Tool → Artifact 调用链。
+- 保留本仓库现有 OpenSpec、技能来源锁、安全门禁、版本发布及 CI 要求；静态检查不能替代真实宿主验收。
+- CI 复用组织级 [Partme Plugin Architecture 检查器](https://github.com/full-aigc-plugins/.github/blob/main/scripts/check_plugin_architecture.py)，不得复制独立实现。
+<!-- /partme-agent-plugin-policy:v1 -->
