@@ -12,7 +12,7 @@ This plugin belongs to **Full-stack development**.
 提交前**可选授权**的语义代码审查插件，整合 Open Code Review（OCR）的正式 CLI 接口。
 默认先问用户，拒绝后当前会话静默；审查报告是建议，不是强制通过门禁。
 
-状态：`v0.3.0` push-only 拦截语义（push 阻断 / commit 提醒 / 其余放行）；v0.2.2 完成真实引擎与双模式审查验收（`ocr` v1.12.9，Delegation 与 OCR-managed 各一次真实全链路含真实模型调用），并修复真实契约漂移五处、固化真实输出契约测试。ZCode 与 Codex 已获真实 hook 运行证据（Codex 需先在 TUI 完成 hook 信任审查，否则钩子静默跳过）；Kimi 因本机无 Kimi Code CLI 未验。正式发布身份以 [GitHub Releases](https://github.com/full-stack-plugins/codereview-plugin/releases) 和 [Full Stack 插件市场](https://github.com/partme-ai/full-stack-plugins) 为准。
+状态：`v0.3.1` push-only 拦截语义（push 阻断 / commit 提醒 / 其余放行）；v0.2.2 完成真实引擎与双模式审查验收（`ocr` v1.12.9，Delegation 与 OCR-managed 各一次真实全链路含真实模型调用），并修复真实契约漂移五处、固化真实输出契约测试。ZCode 与 Codex 已获真实 hook 运行证据（Codex 需先在 TUI 完成 hook 信任审查，否则钩子静默跳过）；Kimi 因本机无 Kimi Code CLI 未验。正式发布身份以 [GitHub Releases](https://github.com/full-stack-plugins/codereview-plugin/releases) 和 [Full Stack 插件市场](https://github.com/partme-ai/full-stack-plugins) 为准。
 
 ## 使用体验
 
