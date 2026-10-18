@@ -4,4 +4,4 @@
 # for the other hosts.
 - insert:
     - id: codereview-plugin-plugin
-      name: '@partme-dsh/codereview-plugin'
+      name: 'codereview-plugin'

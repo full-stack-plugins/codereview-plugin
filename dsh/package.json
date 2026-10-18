@@ -1,5 +1,5 @@
 {
-  "name": "@partme-dsh/codereview-plugin",
+  "name": "codereview",
   "version": "0.4.0",
   "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
   "type": "module",
@@ -25,5 +25,6 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
-  }
+  },
+  "private": true
 }
