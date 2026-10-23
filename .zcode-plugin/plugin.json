@@ -1,10 +1,13 @@
 {
   "name": "codereview-plugin",
   "version": "0.4.0",
-  "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
-  "displayName": "CodeReview",
+  "description": "Consent-based semantic review of staged commits through Open Code Review delegation or a configured model. Findings remain advisory.",
+  "displayName": "Commit Review · CodeReview",
   "author": {
     "name": "Full Stack Skills / PartMe.AI"
   },
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "displayName_i18n": {
+    "en": "Commit Review · CodeReview"
+  }
 }

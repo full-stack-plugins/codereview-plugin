@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "codereview-plugin",
   "version": "0.4.0",
-  "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
+  "description": "Consent-based semantic review of staged commits through Open Code Review delegation or a configured model. Findings remain advisory.",
   "author": {
     "name": "Full Stack Skills / PartMe.AI"
   },
@@ -12,8 +12,8 @@
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "CodeReview",
-        "shortDescription": "Review staged commits with explicit consent",
+        "displayName": "Commit Review · CodeReview",
+        "shortDescription": "Logic and security review of staged commits, with consent",
         "longDescription": "通过 Open Code Review 选择候选文件和规则，默认由当前宿主智能体审查，也可使用 OCR-managed 模式；提供结构化建议，不替代流程验收或静态检查。",
         "developerName": "Full Stack Skills / PartMe.AI",
         "category": "Developer Tools",
@@ -22,7 +22,9 @@
           "请披露代码外发范围，再询问是否审查本次提交。"
         ],
         "logo": "./assets/official-logo.png",
-        "logoDark": "./assets/official-logo.png"
+        "logoDark": "./assets/official-logo.png",
+        "composerIcon": "./assets/official-logo.png",
+        "composerIconDark": "./assets/official-logo.png"
       }
     },
     "ai.nanoco.nanoclaw": {

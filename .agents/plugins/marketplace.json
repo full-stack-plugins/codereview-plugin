@@ -1,7 +1,7 @@
 {
   "name": "full-stack-plugins-codereview",
   "interface": {
-    "displayName": "CodeReview"
+    "displayName": "Commit Review · CodeReview"
   },
   "plugins": [
     {
@@ -17,11 +17,11 @@
       },
       "category": "Developer Tools",
       "version": "0.4.0",
-      "description": "Consent-based semantic review of staged commits using Open Code Review delegation or a configured OCR model; findings remain advisory.",
+      "description": "Consent-based semantic review of staged commits through Open Code Review delegation or a configured model. Findings remain advisory.",
       "icon": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.0/assets/official-logo.png",
       "interface": {
-        "displayName": "CodeReview",
-        "shortDescription": "Review staged commits with explicit consent",
+        "displayName": "Commit Review · CodeReview",
+        "shortDescription": "Logic and security review of staged commits, with consent",
         "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.0/assets/official-logo.png"
       }
     }
