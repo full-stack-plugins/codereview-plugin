@@ -23,7 +23,12 @@
         "displayName": "CodeReview · Commit Review",
         "shortDescription": "Logic and security review of staged commits, with consent",
         "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.0/assets/official-logo.png"
-      }
+      },
+      "line": "full-stack",
+      "componentTypes": [
+        "skills",
+        "mcp"
+      ]
     }
   ]
 }
