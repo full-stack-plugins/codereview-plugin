@@ -1,7 +1,7 @@
 {
   "name": "full-stack-plugins-codereview",
   "interface": {
-    "displayName": "CodeReview · Commit Review"
+    "displayName": "CodeReview（提交语义审查）"
   },
   "plugins": [
     {
