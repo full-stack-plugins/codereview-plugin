@@ -18,18 +18,19 @@
       "category": "Developer Tools",
       "version": "0.4.1",
       "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
-      "icon": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.0/assets/official-logo.png",
+      "icon": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.1/assets/official-logo.png",
       "interface": {
         "displayName": "CodeReview（提交语义审查）",
         "shortDescription": "暂存提交的逻辑与安全审查，需显式授权",
-        "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.0/assets/official-logo.png"
+        "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.1/assets/official-logo.png"
       },
       "line": "full-stack",
       "componentTypes": [
         "skills",
         "mcp"
       ],
-      "displayName": "CodeReview（提交语义审查）"
+      "displayName": "CodeReview（提交语义审查）",
+      "shortDescription": "暂存提交的逻辑与安全审查，需显式授权"
     }
   ]
 }
