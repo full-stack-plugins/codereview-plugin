@@ -7,7 +7,7 @@
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Commit Review · CodeReview",
+    "displayName": "CodeReview · Commit Review",
     "shortDescription": "Logic and security review of staged commits, with consent"
   },
   "hooks": [

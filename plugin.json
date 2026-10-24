@@ -12,7 +12,7 @@
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Commit Review · CodeReview",
+        "displayName": "CodeReview · Commit Review",
         "shortDescription": "Logic and security review of staged commits, with consent",
         "longDescription": "通过 Open Code Review 选择候选文件和规则，默认由当前宿主智能体审查，也可使用 OCR-managed 模式；提供结构化建议，不替代流程验收或静态检查。",
         "developerName": "Full Stack Skills / PartMe.AI",
