@@ -1,6 +1,6 @@
 {
   "name": "codereview-plugin",
-  "version": "0.4.1",
+  "version": "0.4.0",
   "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
   "author": {
     "name": "Full Stack Skills / PartMe.AI"
