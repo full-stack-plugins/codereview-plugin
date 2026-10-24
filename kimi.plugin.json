@@ -1,14 +1,14 @@
 {
   "name": "codereview-plugin",
   "version": "0.4.0",
-  "description": "Consent-based semantic review of staged commits through Open Code Review delegation or a configured model. Findings remain advisory.",
+  "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
   "author": {
     "name": "Full Stack Skills / PartMe.AI"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "CodeReview · Commit Review",
-    "shortDescription": "Logic and security review of staged commits, with consent"
+    "displayName": "CodeReview（提交语义审查）",
+    "shortDescription": "暂存提交的逻辑与安全审查，需显式授权"
   },
   "hooks": [
     {
@@ -38,5 +38,11 @@
       "command": "python3 ./hooks/entry.py --host kimi",
       "timeout": 10
     }
-  ]
+  ],
+  "displayName_i18n": {
+    "zh-CN": "CodeReview（提交语义审查）"
+  },
+  "description_i18n": {
+    "zh-CN": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。"
+  }
 }

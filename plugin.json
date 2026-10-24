@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "codereview-plugin",
   "version": "0.4.0",
-  "description": "Consent-based semantic review of staged commits through Open Code Review delegation or a configured model. Findings remain advisory.",
+  "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
   "author": {
     "name": "Full Stack Skills / PartMe.AI"
   },
@@ -30,5 +30,12 @@
     "ai.nanoco.nanoclaw": {
       "agentName": "CodeReview"
     }
+  },
+  "displayName": "CodeReview（提交语义审查）",
+  "displayName_i18n": {
+    "zh-CN": "CodeReview（提交语义审查）"
+  },
+  "description_i18n": {
+    "zh-CN": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。"
   }
 }
