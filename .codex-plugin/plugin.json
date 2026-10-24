@@ -1,6 +1,6 @@
 {
   "name": "codereview-plugin",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
   "homepage": "https://github.com/full-stack-plugins/codereview-plugin",
   "repository": "https://github.com/full-stack-plugins/codereview-plugin",
@@ -10,7 +10,7 @@
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "CodeReview · Commit Review",
+    "displayName": "CodeReview（代码变更审查）",
     "shortDescription": "Logic and security review of staged commits, with consent",
     "longDescription": "通过 Open Code Review 选择候选文件和规则，默认由当前宿主智能体审查，也可使用 OCR-managed 模式；提供结构化建议，不替代流程验收或静态检查。",
     "developerName": "Full Stack Skills / PartMe.AI",
@@ -24,9 +24,9 @@
     "composerIcon": "./assets/official-logo.png",
     "composerIconDark": "./assets/official-logo.png"
   },
-  "displayName": "CodeReview（提交语义审查）",
+  "displayName": "CodeReview（代码变更审查）",
   "displayName_i18n": {
-    "zh-CN": "CodeReview（提交语义审查）"
+    "zh-CN": "CodeReview（代码变更审查）"
   },
   "description_i18n": {
     "zh-CN": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。"
