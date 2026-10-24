@@ -9,6 +9,10 @@ description: 处理 CodeReview 插件的提交前授权提示，或用户要求�
 这是插件专属 harness：AI 准备 `git commit` 或处理本插件的授权/报告时优先使用本技能。手动审查普通工作区、分支或单提交可使用上游 `open-code-review`（OCR-managed）或 `open-code-review-delegate`（宿主推理），但它们不能继承这里的提交授权，也不能把真实工作区输出冒充本插件的暂存快照报告。
 插件根目录取宿主提供的 `PLUGIN_ROOT` / `ZCODE_PLUGIN_ROOT` / `KIMI_PLUGIN_ROOT` / `CLAUDE_PLUGIN_ROOT`；否则根据本技能实际位置确认父级插件目录。不要猜测缓存版本或固定机器路径。
 
+## 路由
+
+先按 [技能路由](references/routing.md) 选择入口；OCR 命令名以 [OCR 命令面](references/ocr-command-surface.md) 为准：提交授权走本技能，工作区/分支/单提交走 open-code-review，整文件审计走 codereview-scan，宿主模型审查走 open-code-review-delegate。不要用一个技能覆盖全部场景。
+
 ## 输入与职责
 
 读取 Hook 返回的 version、host、session、repo、task_id、scope、action、notify。
