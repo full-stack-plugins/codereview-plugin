@@ -1,6 +1,6 @@
 {
   "name": "codereview-plugin",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
   "displayName": "CodeReview（代码变更审查）",
   "author": {
