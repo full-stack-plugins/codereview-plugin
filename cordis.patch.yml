@@ -2,4 +2,4 @@
 # The full host (including optional MCP rows) lives in dsh/.
 - insert:
     - id: codereview-plugin
-      name: "codereview-plugin"
+      name: "codereview"

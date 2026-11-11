@@ -3,6 +3,7 @@ import importlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tomllib
@@ -13,6 +14,14 @@ from test_runtime import runtime
 from test_git_snapshot import repo
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_dsh_bundle_imports_its_installed_package():
+    package = json.loads((ROOT / "package.json").read_text())
+    patch = (ROOT / package["dsh"]["bundle"]["patch"]).read_text()
+    first_name = re.search(r"^\s+name:\s*['\"]?([^'\"\s]+)", patch, re.M)
+    assert first_name is not None
+    assert first_name.group(1) == package["name"]
 
 
 def test_consumer_requires_current_evidence_but_never_grants_acceptance(runtime):
