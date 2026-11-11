@@ -1,7 +1,7 @@
 {
   "name": "codereview-plugin",
-  "version": "0.4.3",
-  "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
+  "version": "0.4.4+codex.20261111",
+  "description": "提交前做一次语义审查：只读暂存内容，逐行指出逻辑和安全风险，需你显式授权。",
   "homepage": "https://github.com/full-stack-plugins/codereview-plugin",
   "repository": "https://github.com/full-stack-plugins/codereview-plugin",
   "license": "Apache-2.0",
@@ -11,7 +11,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "CodeReview（代码变更审查）",
-    "shortDescription": "Logic and security review of staged commits, with consent",
+    "shortDescription": "提交前做一次语义审查：只读暂存内容，逐行指出逻辑和安全风险，需你显式授权。",
     "longDescription": "通过 Open Code Review 选择候选文件和规则，默认由当前宿主智能体审查，也可使用 OCR-managed 模式；提供结构化建议，不替代流程验收或静态检查。",
     "developerName": "Full Stack Skills / PartMe.AI",
     "category": "Developer Tools",

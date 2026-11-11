@@ -1,7 +1,7 @@
 {
   "name": "full-stack-plugins-codereview",
   "interface": {
-    "displayName": "CodeReview（提交语义审查）"
+    "displayName": "CodeReview（代码变更审查）"
   },
   "plugins": [
     {
@@ -9,20 +9,20 @@
       "source": {
         "source": "url",
         "url": "https://github.com/full-stack-plugins/codereview-plugin.git",
-        "ref": "v0.4.3"
+        "ref": "v0.4.4"
       },
       "policy": {
         "installation": "AVAILABLE",
         "authentication": "ON_USE"
       },
       "category": "Developer Tools",
-      "version": "0.4.3",
-      "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
-      "icon": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.3/assets/official-logo.png",
+      "version": "0.4.4",
+      "description": "提交前做一次语义审查：只读暂存内容，逐行指出逻辑和安全风险，需你显式授权。",
+      "icon": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.4/assets/official-logo.png",
       "interface": {
-        "displayName": "CodeReview（提交语义审查）",
-        "shortDescription": "暂存提交的逻辑与安全审查，需显式授权",
-        "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.3/assets/official-logo.png"
+        "displayName": "CodeReview（代码变更审查）",
+        "shortDescription": "提交前做一次语义审查：只读暂存内容，逐行指出逻辑和安全风险，需你显式授权。",
+        "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codereview-plugin@v0.4.4/assets/official-logo.png"
       },
       "line": "full-stack",
       "componentTypes": [

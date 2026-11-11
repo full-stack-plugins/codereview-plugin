@@ -2,7 +2,7 @@
 
 > 使用阿里云 OCR 原生命令；插件只做授权编排、路由和报告解释。
 
-**Version**: 0.4.3 · **License**: Apache-2.0 · **Skills**: 8
+**Version**: 0.4.4 · **License**: Apache-2.0 · **Skills**: 8
 
 [简体中文](README.md)
 

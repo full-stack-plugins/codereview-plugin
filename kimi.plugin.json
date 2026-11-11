@@ -1,14 +1,14 @@
 {
   "name": "codereview-plugin",
-  "version": "0.4.3",
-  "description": "经显式授权，对暂存提交做语义审查（OCR 委托或自配模型）；结论仅作建议，不替代静态检查。",
+  "version": "0.4.4",
+  "description": "提交前做一次语义审查：只读暂存内容，逐行指出逻辑和安全风险，需你显式授权。",
   "author": {
     "name": "Full Stack Skills / PartMe.AI"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "CodeReview（代码变更审查）",
-    "shortDescription": "暂存提交的逻辑与安全审查，需显式授权"
+    "shortDescription": "提交前做一次语义审查：只读暂存内容，逐行指出逻辑和安全风险，需你显式授权。"
   },
   "hooks": [
     {
